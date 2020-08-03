@@ -3,4 +3,13 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="all_line">#F4F4F4</color>
+    <color name="tv333">#333333</color>
+    <color name="tv888">#888888</color>
+
+    <color name="bot_text">#00a0c3</color>
+
+
 </resources>
