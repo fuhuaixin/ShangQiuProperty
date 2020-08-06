@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp">
+
+    <ImageView
+        android:id="@+id/image_status"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/shape_oval_gray" />
+
+    <LinearLayout
+        android:id="@+id/ll_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/image_status"
+        android:orientation="vertical"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="111"
+            android:textColor="@color/tv333"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_marginRight="5dp"
+                android:src="@mipmap/icon_equ_little_music"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/tv_music"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="类型和房间"
+                android:textColor="@color/tv888"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@+id/image_right"
+        android:text="已完成"
+        android:textColor="@color/tvaaa"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/image_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@mipmap/icon_repairs_right" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/ll_msg"
+        android:layout_marginLeft="31dp"
+        android:background="@color/all_line" />
+</RelativeLayout>

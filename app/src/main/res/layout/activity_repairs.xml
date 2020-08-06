@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/include_title"
+        layout="@layout/include_activity_title" />
+
+
+    <LinearLayout
+        android:id="@+id/ll_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/include_title"
+        android:layout_margin="15dp"
+        android:background="@drawable/shape_search_bg"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:src="@mipmap/icon_repairs_search" />
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="搜索报修记录"
+            android:padding="15dp"
+            android:textColor="@color/tv333"
+            android:textColorHint="@color/tv888"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle_repairs"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tv_to_repairs"
+        android:layout_below="@+id/ll_search" />
+
+    <TextView
+        android:id="@+id/tv_to_repairs"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="15dp"
+        android:background="@drawable/shape_search_bg"
+        android:gravity="center"
+        android:text="我要报修"
+        android:textColor="@color/bot_text"
+        android:textSize="16sp" />
+
+</RelativeLayout>

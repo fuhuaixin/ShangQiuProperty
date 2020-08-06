@@ -8,8 +8,13 @@
     <color name="all_line">#F4F4F4</color>
     <color name="tv333">#333333</color>
     <color name="tv888">#888888</color>
+    <color name="tvccc">#cccccc</color>
+    <color name="tvaaa">#aaaaaa</color>
 
     <color name="bot_text">#00a0c3</color>
+    <color name="oa_center">#ff5454</color>
+    <color name="col_search">#f2f2f2</color>
+    <color name="col_repairs_blue">#05e9fd</color>
 
 
 </resources>

@@ -14,12 +14,15 @@ import androidx.viewpager.widget.ViewPager;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.fhx.property.R;
+import com.fhx.property.activity.EquManageActivity;
+import com.fhx.property.activity.RepairsActivity;
 import com.fhx.property.adapter.HomeNavAdapter;
 import com.fhx.property.adapter.HomeTaskAdapter;
 import com.fhx.property.base.BaseFragment;
 import com.fhx.property.bean.HomeNavBean;
 import com.fhx.property.bean.HomeTaskBean;
 import com.fhx.property.utils.CameraAndChooseDialog;
+import com.fhx.property.utils.CutToUtils;
 import com.to.aboomy.banner.Banner;
 import com.to.aboomy.banner.HolderCreator;
 import com.to.aboomy.banner.ScaleInTransformer;
@@ -43,6 +46,7 @@ public class HomeFragment extends BaseFragment {
     private HomeTaskAdapter homeTaskAdapter;
     private List<HomeNavBean> homeNavBeanList =new ArrayList<>();
     private List<HomeTaskBean> homeTaskBeanList =new ArrayList<>();
+    private List<String> dialogList = new ArrayList<>();
     @Override
     public int setLayoutId() {
         return R.layout.fragment_home;
@@ -89,14 +93,10 @@ public class HomeFragment extends BaseFragment {
         recycle_task.setLayoutManager(new LinearLayoutManager(getContext()));
         recycle_task.setAdapter(homeTaskAdapter);
 
-        cameraAndChooseDialog = new CameraAndChooseDialog(getActivity(), new CameraAndChooseDialog.LeaveMyDialogListener() {
+        cameraAndChooseDialog = new CameraAndChooseDialog(getActivity(), dialogList, new CameraAndChooseDialog.LeaveMyDialogListener() {
             @Override
-            public void onClick(View view) {
-                switch (view.getId()) {
-                    case R.id.tv_cancel:
-                        cameraAndChooseDialog.dismiss();
-                        break;
-                }
+            public void onClick(BaseQuickAdapter adapter, View view, int position) {
+
             }
         });
 
@@ -133,6 +133,11 @@ public class HomeFragment extends BaseFragment {
         homeNavAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                if (homeNavBeanList.get(position).getTitle().equals("报修")){
+                    CutToUtils.getInstance().JumpTo(getActivity(), RepairsActivity.class);
+                }else if (homeNavBeanList.get(position).getTitle().equals("设备管理")){
+                    CutToUtils.getInstance().JumpTo(getActivity(), EquManageActivity.class);
+                }
                 Toast.makeText(getContext(), "点击了"+position, Toast.LENGTH_SHORT).show();
             }
         });

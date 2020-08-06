@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:background="@color/all_line"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <include
+            layout="@layout/include_activity_title"/>
+
+        <ImageView
+            android:id="@+id/image_public"
+            android:layout_marginTop="15dp"
+            android:scaleType="fitXY"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:src="@mipmap/image_equ_manage_music"/>
+        <ImageView
+            android:id="@+id/image_information"
+            android:scaleType="fitXY"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:src="@mipmap/image_equ_manage_send"/>
+        <ImageView
+            android:id="@+id/image_light"
+            android:scaleType="fitXY"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:src="@mipmap/image_equ_manage_light"/>
+        <ImageView
+            android:id="@+id/image_pump"
+            android:scaleType="fitXY"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:src="@mipmap/image_equ_manage_pump"/>
+        <ImageView
+            android:id="@+id/image_fresh"
+            android:scaleType="fitXY"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:src="@mipmap/image_equ_manage_fresh"/>
+        <ImageView
+            android:id="@+id/image_ventilating"
+            android:scaleType="fitXY"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:src="@mipmap/image_equ_manage_vent"/>
+    </LinearLayout>
+
+
+
+
+</androidx.core.widget.NestedScrollView>

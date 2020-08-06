@@ -2,7 +2,9 @@ package com.fhx.property.base;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.Toast;
 
+import com.fhx.property.R;
 import com.zyao89.view.zloading.ZLoadingDialog;
 import com.zyao89.view.zloading.Z_TYPE;
 
@@ -15,12 +17,13 @@ public abstract class BaseActivity extends SwipeBackActivity {
 
     private SwipeBackLayout mSwipeBackLayout;
     public ZLoadingDialog zLoadingDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView( initLayout());
+        setContentView(initLayout());
 
-        mSwipeBackLayout =getSwipeBackLayout();
+        mSwipeBackLayout = getSwipeBackLayout();
         // 可以调用该方法，设置是否允许滑动退出
         setSwipeBackEnable(true);
         // 设置滑动方向，可设置EDGE_LEFT, EDGE_RIGHT, EDGE_ALL, EDGE_BOTTOM
@@ -40,7 +43,7 @@ public abstract class BaseActivity extends SwipeBackActivity {
      * dialog相关
      */
     public void dialog() {
-        zLoadingDialog =new  ZLoadingDialog(this);
+        zLoadingDialog = new ZLoadingDialog(this);
         zLoadingDialog.setLoadingBuilder(Z_TYPE.CHART_RECT)
                 .setLoadingColor(Color.parseColor("#eeeeee"))
                 .setHintText("加载中...")
@@ -72,9 +75,22 @@ public abstract class BaseActivity extends SwipeBackActivity {
      * 设置数据
      */
     protected abstract void initData();
+
     /**
      * 设置数据监听
      */
-    protected abstract void  initListen();
+    protected abstract void initListen();
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(R.anim.activity_out_from_animation, R.anim.activity_out_to_animation);
+    }
+
+    public void ToastShort(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
 
 }

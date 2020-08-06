@@ -3,14 +3,15 @@
     package="com.fhx.property">
 
 
+    <uses-feature android:name="android.hardware.camera" /> <!-- 相机权限 -->
     <!--相机权限-->
     <uses-permission android:name="android.permission.CAMERA" />
     <!--写入SD卡的权限：如果你希望保存相机拍照后的照片-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--读取SD卡的权限:打开相册选取图片所必须的权限-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
 
     <application
@@ -20,7 +21,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,6 +30,41 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--报修-->
+        <activity
+            android:name=".activity.RepairsActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--报修详情-->
+        <activity
+            android:name=".activity.RepairsMsgActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--报修评价-->
+        <activity
+            android:name=".activity.RepairsMsgEvaActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--报修评价提交-->
+        <activity
+            android:name=".activity.RepairsCommitActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--设备管理-->
+        <activity android:name=".activity.EquManageActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--背景音乐 广播-->
+        <activity android:name=".activity.BroadcastActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--背景音乐 广播 详情-->
+        <activity android:name=".activity.BroadcastMsgActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.fhx.property.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
     </application>
 
 </manifest>
