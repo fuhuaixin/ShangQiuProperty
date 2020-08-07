@@ -1,5 +1,6 @@
 package com.fhx.property.activity;
 
+import android.app.Activity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -64,27 +65,33 @@ public class EquManageActivity extends BaseActivity implements View.OnClickListe
                 finish();
                 overridePendingTransition(R.anim.activity_out_from_animation, R.anim.activity_out_to_animation);
                 break;
-            case R.id.image_public:
-                CutToUtils.getInstance().JumpTo(EquManageActivity.this,BroadcastActivity.class);
+            case R.id.image_public: //背景音乐广播
+                JumpTo(BroadcastActivity.class);
                 break;
-            case R.id.image_information:
-
+            case R.id.image_information: //信息 广告屏 发布
+                JumpTo(InformationActivity.class);
                 break;
             case R.id.image_light:
-
+                JumpTo(LightActivity.class);
                 break;
             case R.id.image_pump:
-
+                CutToUtils.getInstance().JumpToOne(EquManageActivity.this,WaterPumpActivity.class,"pump");
                 break;
 
             case R.id.image_fresh:
+                CutToUtils.getInstance().JumpToOne(EquManageActivity.this,WaterPumpActivity.class,"fresh");
 
                 break;
 
             case R.id.image_ventilating:
+                CutToUtils.getInstance().JumpToOne(EquManageActivity.this,WaterPumpActivity.class,"ventilate");
 
                 break;
 
         }
+    }
+
+    private void JumpTo(Class<? extends Activity> activity){
+        CutToUtils.getInstance().JumpTo(EquManageActivity.this,activity);
     }
 }

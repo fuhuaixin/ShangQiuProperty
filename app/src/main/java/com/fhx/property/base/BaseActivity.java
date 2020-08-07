@@ -1,10 +1,15 @@
 package com.fhx.property.base;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.fhx.property.R;
+import com.fhx.property.activity.WaterPumpMsgActivity;
 import com.zyao89.view.zloading.ZLoadingDialog;
 import com.zyao89.view.zloading.Z_TYPE;
 
@@ -91,6 +96,27 @@ public abstract class BaseActivity extends SwipeBackActivity {
 
     public void ToastShort(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+
+    /**
+     * 弹出窗
+     */
+
+    public void ShowMenu(Context context,View view) {
+        PopupMenu popupMenu = new PopupMenu(context, view);
+        popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.record:
+                        ToastShort("点击了record");
+                        break;
+                }
+                return true;
+            }
+        });
+        popupMenu.show();
     }
 
 }

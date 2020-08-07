@@ -9,61 +9,56 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.fhx.property.R;
-import com.fhx.property.adapter.EquBroadAdapter;
+import com.fhx.property.adapter.InformationAdapter;
 import com.fhx.property.base.BaseActivity;
-import com.fhx.property.bean.EquBroadBean;
+import com.fhx.property.bean.InformationBean;
 import com.fhx.property.utils.CutToUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 背景音乐  公共广播
+ * 信息发布列表页
  */
-public class BroadcastActivity extends BaseActivity implements View.OnClickListener{
-
+public class InformationActivity extends BaseActivity implements View.OnClickListener {
     private ImageView imageLeft;
     private TextView tvTitle;
-
-    private RecyclerView recycle_broadcast;
-    private EquBroadAdapter equBroadAdapter;
-    private List<EquBroadBean> equBroadBeanList =new ArrayList<>();
+    private RecyclerView recycle_information;
+    private InformationAdapter adapter ;
+    private List<InformationBean> beanList =new ArrayList<>();
     @Override
     protected int initLayout() {
-        return R.layout.activity_broadcast;
+        return R.layout.activity_information;
     }
 
     @Override
     protected void initView() {
         imageLeft = (ImageView) findViewById(R.id.image_left);
         tvTitle = (TextView) findViewById(R.id.tv_title);
-        recycle_broadcast = (RecyclerView) findViewById(R.id.recycle_broadcast);
+        recycle_information = (RecyclerView) findViewById(R.id.recycle_information);
+
     }
 
     @Override
     protected void initData() {
-        tvTitle.setText("背景音乐和公共广播");
-        equBroadBeanList.add(new EquBroadBean("一区设备","小红帽.mp3",0));
-        equBroadBeanList.add(new EquBroadBean("二区设备","爱丽丝的围裙.mp3",1));
-        equBroadBeanList.add(new EquBroadBean("三区设备","狂野大灰狼.avm",0));
-        recycle_broadcast.setLayoutManager(new LinearLayoutManager(this));
-        equBroadAdapter = new EquBroadAdapter(equBroadBeanList,"broad");
-        recycle_broadcast.setAdapter(equBroadAdapter);
-
-
+        tvTitle.setText("信息发布系统");
+        beanList.add(new InformationBean(0,"一层LED显示屏","10h"));
+        beanList.add(new InformationBean(1,"电梯19寸发布屏","20h"));
+        beanList.add(new InformationBean(0,"电梯32寸一体机","15h"));
+        adapter =new InformationAdapter(beanList);
+        recycle_information.setLayoutManager(new LinearLayoutManager(this));
+        recycle_information.setAdapter(adapter);
     }
 
     @Override
     protected void initListen() {
         imageLeft.setOnClickListener(this);
-
-        equBroadAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+        adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                CutToUtils.getInstance().JumpToBean(BroadcastActivity.this,BroadcastMsgActivity.class,equBroadBeanList.get(position));
+                CutToUtils.getInstance().JumpToBean(InformationActivity.this,InformationMsgActivity.class,beanList.get(position));
             }
         });
-
     }
 
     @Override
@@ -73,7 +68,6 @@ public class BroadcastActivity extends BaseActivity implements View.OnClickListe
                 finish();
                 overridePendingTransition(R.anim.activity_out_from_animation, R.anim.activity_out_to_animation);
                 break;
-
         }
     }
 }

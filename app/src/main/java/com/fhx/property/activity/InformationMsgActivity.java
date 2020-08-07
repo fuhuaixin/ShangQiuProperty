@@ -4,7 +4,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,34 +13,32 @@ import com.fhx.property.R;
 import com.fhx.property.adapter.BroadMSgAdapter;
 import com.fhx.property.base.BaseActivity;
 import com.fhx.property.bean.BroadMsgBean;
-import com.fhx.property.bean.EquBroadBean;
+import com.fhx.property.bean.InformationBean;
 import com.fhx.property.utils.CutToUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 音乐 广播详情
+ * 信息发布设备管理
  */
-public class BroadcastMsgActivity extends BaseActivity implements View.OnClickListener {
+public class InformationMsgActivity extends BaseActivity implements View.OnClickListener {
+
     private ImageView imageRight;
     private ImageView imageLeft;
-    private ImageView image_swith;
     private TextView tvTitle;
-    private TextView tv_broad_type;
-    private TextView tv_broad_title;
     private TextView tv_add_temp;
-    private EquBroadBean equBroadBean;
-    private RecyclerView recycle_temporary;
+    private ImageView image_swith;
+    private RecyclerView recycle_information;
+
+    private InformationBean informationBean;
     private BroadMSgAdapter broadMSgAdapter;
     private List<BroadMsgBean> beanList = new ArrayList<>();
     private List<String> repetitionList = new ArrayList<>();
 
-    private int swith = 0;
-
     @Override
     protected int initLayout() {
-        return R.layout.activity_broadcast_msg;
+        return R.layout.activity_information_msg;
     }
 
     @Override
@@ -51,31 +48,18 @@ public class BroadcastMsgActivity extends BaseActivity implements View.OnClickLi
         image_swith = (ImageView) findViewById(R.id.image_swith);
         tvTitle = (TextView) findViewById(R.id.tv_title);
         tv_add_temp = (TextView) findViewById(R.id.tv_add_temp);
-        tv_broad_type = (TextView) findViewById(R.id.tv_broad_type);
-        tv_broad_title = (TextView) findViewById(R.id.tv_broad_title);
-        recycle_temporary = (RecyclerView) findViewById(R.id.recycle_temporary);
+        recycle_information = (RecyclerView) findViewById(R.id.recycle_information);
     }
 
     @Override
     protected void initData() {
-        equBroadBean = (EquBroadBean) getIntent().getSerializableExtra("bean");
-
-        tvTitle.setText(equBroadBean.getTitle());
-
-        imageRight.setVisibility(View.VISIBLE);
-        imageRight.setImageResource(R.mipmap.icon_title_right_more);
-
-        if (equBroadBean.getStatus() == 0) {
+        informationBean = (InformationBean) getIntent().getSerializableExtra("bean");
+        tvTitle.setText(informationBean.getTitle());
+        if (informationBean.getStatus() == 0) {
             image_swith.setImageResource(R.mipmap.icon_swith_unsel);
-            swith = 0;
         } else {
             image_swith.setImageResource(R.mipmap.image_switch_sel);
-            swith = 1;
         }
-
-        tv_broad_type.setText(equBroadBean.getTitle() + "type");
-        tv_broad_title.setText(equBroadBean.getMusic());
-
         repetitionList.add("不重复");
         beanList.add(new BroadMsgBean(0, "类型1", "播放内容1.mp3", "7:00", "8:00", repetitionList));
         repetitionList.clear();
@@ -90,9 +74,8 @@ public class BroadcastMsgActivity extends BaseActivity implements View.OnClickLi
 
 
         broadMSgAdapter = new BroadMSgAdapter(beanList);
-        recycle_temporary.setLayoutManager(new LinearLayoutManager(this));
-        recycle_temporary.setAdapter(broadMSgAdapter);
-
+        recycle_information.setLayoutManager(new LinearLayoutManager(this));
+        recycle_information.setAdapter(broadMSgAdapter);
     }
 
     @Override
@@ -110,12 +93,33 @@ public class BroadcastMsgActivity extends BaseActivity implements View.OnClickLi
                 overridePendingTransition(R.anim.activity_out_from_animation, R.anim.activity_out_to_animation);
                 break;
             case R.id.image_right:
-                ShowMenu(BroadcastMsgActivity.this,imageRight);
+                ShowMenu(imageRight);
                 break;
             case R.id.tv_add_temp:
-                CutToUtils.getInstance().JumpTo(BroadcastMsgActivity.this, BroadTempActivity.class);
+                CutToUtils.getInstance().JumpTo(InformationMsgActivity.this, InformationTempActivity.class);
                 break;
         }
+    }
+
+
+    /**
+     * 弹出窗
+     */
+
+    private void ShowMenu(View view) {
+        PopupMenu popupMenu = new PopupMenu(InformationMsgActivity.this, view);
+        popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.record:
+                        ToastShort("点击了record");
+                        break;
+                }
+                return true;
+            }
+        });
+        popupMenu.show();
     }
 
 

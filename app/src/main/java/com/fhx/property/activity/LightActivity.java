@@ -18,39 +18,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 背景音乐  公共广播
+ * 智能照明列表
  */
-public class BroadcastActivity extends BaseActivity implements View.OnClickListener{
+public class LightActivity extends BaseActivity implements View.OnClickListener{
 
     private ImageView imageLeft;
     private TextView tvTitle;
 
-    private RecyclerView recycle_broadcast;
+    private RecyclerView recycle_light;
     private EquBroadAdapter equBroadAdapter;
     private List<EquBroadBean> equBroadBeanList =new ArrayList<>();
     @Override
     protected int initLayout() {
-        return R.layout.activity_broadcast;
+        return R.layout.activity_light;
     }
 
     @Override
     protected void initView() {
         imageLeft = (ImageView) findViewById(R.id.image_left);
         tvTitle = (TextView) findViewById(R.id.tv_title);
-        recycle_broadcast = (RecyclerView) findViewById(R.id.recycle_broadcast);
+        recycle_light = (RecyclerView) findViewById(R.id.recycle_light);
     }
 
     @Override
     protected void initData() {
-        tvTitle.setText("背景音乐和公共广播");
-        equBroadBeanList.add(new EquBroadBean("一区设备","小红帽.mp3",0));
-        equBroadBeanList.add(new EquBroadBean("二区设备","爱丽丝的围裙.mp3",1));
-        equBroadBeanList.add(new EquBroadBean("三区设备","狂野大灰狼.avm",0));
-        recycle_broadcast.setLayoutManager(new LinearLayoutManager(this));
-        equBroadAdapter = new EquBroadAdapter(equBroadBeanList,"broad");
-        recycle_broadcast.setAdapter(equBroadAdapter);
-
-
+        tvTitle.setText("智能照明");
+        equBroadBeanList.add(new EquBroadBean("负一楼照明","暖光",0));
+        equBroadBeanList.add(new EquBroadBean("负二楼照明","无场景",1));
+        equBroadBeanList.add(new EquBroadBean("一楼照明","白昼",0));
+        equBroadBeanList.add(new EquBroadBean("四至十七楼照明","白昼",1));
+        recycle_light.setLayoutManager(new LinearLayoutManager(this));
+        equBroadAdapter = new EquBroadAdapter(equBroadBeanList,"light");
+        recycle_light.setAdapter(equBroadAdapter);
     }
 
     @Override
@@ -60,10 +59,9 @@ public class BroadcastActivity extends BaseActivity implements View.OnClickListe
         equBroadAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                CutToUtils.getInstance().JumpToBean(BroadcastActivity.this,BroadcastMsgActivity.class,equBroadBeanList.get(position));
+                CutToUtils.getInstance().JumpToBean(LightActivity.this,LightSettingActivity.class,equBroadBeanList.get(position));
             }
         });
-
     }
 
     @Override

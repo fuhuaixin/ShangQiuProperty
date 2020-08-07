@@ -7,11 +7,10 @@
     android:paddingRight="15dp">
 
     <ImageView
-        android:id="@+id/image_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:src="@drawable/shape_oval_gray" />
+        android:id="@+id/images_status"
+        android:layout_width="8dp"
+        android:layout_height="8dp"/>
 
     <LinearLayout
         android:id="@+id/ll_msg"
@@ -41,27 +40,22 @@
             android:layout_height="wrap_content">
             <ImageView
                 android:visibility="gone"
-                android:id="@+id/image_little"
                 android:layout_marginRight="5dp"
                 android:src="@mipmap/icon_equ_little_music"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
-                android:id="@+id/tv_music"
+                android:id="@+id/tv_use_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="类型和房间"
                 android:textColor="@color/tv888"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:ellipsize="end"
                 android:textSize="14sp" />
         </LinearLayout>
 
     </LinearLayout>
 
     <TextView
-        android:padding="3dp"
         android:id="@+id/tv_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

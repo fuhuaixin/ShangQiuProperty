@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="设备开关"
+                android:text="临时播放开关"
                 android:textColor="@color/tv333"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -39,6 +39,7 @@
                 android:layout_centerVertical="true"
                 android:src="@mipmap/image_switch_sel" />
         </RelativeLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,12 +54,12 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="10dp"
-                android:text="时间段设置"
+                android:text="开启时间"
                 android:textColor="@color/tv888"
                 android:textSize="12sp" />
 
             <LinearLayout
-                android:id="@+id/ll_choose_type"
+                android:id="@+id/ll_start_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -70,7 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
-                    android:text="设置开启时间"
+                    android:text="播放开始时间"
                     android:textColor="@color/tv333"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -81,10 +82,10 @@
                     android:layout_weight="1" />
 
                 <TextView
-                    android:id="@+id/tv_broad_type"
+                    android:id="@+id/tv_time_start"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="7：00"
+                    android:text="7:00"
                     android:textColor="@color/tvaaa"
                     android:textSize="12sp" />
 
@@ -115,7 +116,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
-                    android:text="设置关闭时间"
+                    android:text="播放结束时间"
                     android:textColor="@color/tv333"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -126,10 +127,10 @@
                     android:layout_weight="1" />
 
                 <TextView
-                    android:id="@+id/tv_broad_title"
+                    android:id="@+id/tv_time_end"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="请选择"
+                    android:text="8:00"
                     android:textColor="@color/tvaaa"
                     android:textSize="12sp" />
 
@@ -143,40 +144,49 @@
         </LinearLayout>
 
         <LinearLayout
+            android:paddingBottom="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="150dp"
             android:background="@color/white"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="15dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="10dp"
-                android:text="临时播放"
+                android:text="是否重复"
                 android:textColor="@color/tv888"
                 android:textSize="12sp" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycle_temporary"
+                android:id="@+id/recycle_choose_day"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
 
-        <TextView
-            android:id="@+id/tv_add_temp"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            android:textColor="@color/col_repairs_blue"
-            android:gravity="center"
-            android:background="@color/white"
-            android:paddingTop="30dp"
-            android:paddingBottom="30dp"
-            android:text="添加临时播放"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_margin="15dp"
+                android:background="@drawable/shape_search_bg"
+                android:gravity="center"
+                android:text="删除临时播放"
+                android:textColor="@color/oa_center"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
     </LinearLayout>
 
 
