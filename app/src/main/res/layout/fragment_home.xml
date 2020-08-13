@@ -97,6 +97,7 @@
         </LinearLayout>
         <!--通知公告-->
         <RelativeLayout
+            android:id="@+id/rl_notify_list"
             android:layout_marginTop="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"

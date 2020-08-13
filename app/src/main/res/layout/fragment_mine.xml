@@ -123,6 +123,7 @@
             android:layout_marginRight="15dp"
             android:background="@drawable/shape_all">
             <LinearLayout
+                android:id="@+id/ll_change_password"
                 android:gravity="center_vertical"
                 android:paddingTop="20dp"
                 android:paddingBottom="20dp"
@@ -216,6 +217,7 @@
                 android:background="@color/all_line"/>
 
             <LinearLayout
+                android:id="@+id/ll_feedback"
                 android:gravity="center_vertical"
                 android:paddingTop="20dp"
                 android:paddingBottom="20dp"
@@ -253,6 +255,7 @@
                 android:background="@color/all_line"/>
 
             <LinearLayout
+                android:id="@+id/ll_about_us"
                 android:gravity="center_vertical"
                 android:paddingTop="20dp"
                 android:paddingBottom="20dp"
@@ -285,11 +288,12 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/tv_logout"
             android:background="@drawable/shape_all"
             android:gravity="center"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/oa_center"
+            android:textColor="@color/col_red"
             android:text="退出登录"
             android:layout_margin="15dp"
             android:layout_width="match_parent"

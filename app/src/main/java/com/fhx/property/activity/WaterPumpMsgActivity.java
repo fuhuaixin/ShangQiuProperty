@@ -31,7 +31,7 @@ public class WaterPumpMsgActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     protected void initData() {
-
+        tvTitle.setText("集水坑");
     }
 
     @Override

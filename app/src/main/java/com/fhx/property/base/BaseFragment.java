@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 public abstract class BaseFragment extends Fragment {
 
@@ -38,6 +40,15 @@ public abstract class BaseFragment extends Fragment {
         findViewById(view);
         setViewData(view);
         setClickEvent(view);
+    }
+
+    public void startToFragment(Context context, int container, Fragment newFragment,String tag) {
+
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(container, newFragment);
+        transaction.addToBackStack(tag);
+        transaction.commit();
     }
 
     /**

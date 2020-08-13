@@ -19,7 +19,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.fhx.property.R;
 import com.fhx.property.adapter.ChooseImgAdapter;
 import com.fhx.property.base.BaseActivity;
-import com.fhx.property.utils.CameraAndChooseDialog;
+import com.fhx.property.utils.ListDialog;
+import com.scrat.app.selectorlibrary.ImageSelector;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class RepairsCommitActivity extends BaseActivity implements View.OnClickL
     private TextView tv_type;
     private LinearLayout ll_choose_type;
     private RecyclerView recycle_image;
-    private CameraAndChooseDialog cameraAndChooseDialog;
+    private ListDialog listDialog;
     private List<String> mChooseList = new ArrayList<>();
     private List<String> mChooseImageList = new ArrayList<>();
     private ChooseImgAdapter chooseImgAdapter;
@@ -127,32 +128,58 @@ public class RepairsCommitActivity extends BaseActivity implements View.OnClickL
                 mChooseImageList.clear();
                 mChooseImageList.add("相机");
                 mChooseImageList.add("选择图片");
-                cameraAndChooseDialog = new CameraAndChooseDialog(RepairsCommitActivity.this, mChooseImageList, new CameraAndChooseDialog.LeaveMyDialogListener() {
+                listDialog = new ListDialog(RepairsCommitActivity.this, mChooseImageList, new ListDialog.LeaveMyDialogListener() {
                     @Override
                     public void onClick(BaseQuickAdapter adapter, View view, int position) {
                         switch (position){
                             case 0:
+                                useCamera();
+                                break;
+                            case 1:
+                                ImageSelector.show(RepairsCommitActivity.this, REQUEST_CODE_SELECT_IMG, MAX_SELECT_COUNT-imageList.size());
 
                                 break;
                         }
-                        cameraAndChooseDialog.dismiss();
+                        listDialog.dismiss();
                     }
                 });
-                cameraAndChooseDialog.show();
+                listDialog.show();
                 break;
             case R.id.ll_choose_type:
 
-                cameraAndChooseDialog = new CameraAndChooseDialog(RepairsCommitActivity.this, mChooseList, new CameraAndChooseDialog.LeaveMyDialogListener() {
+                listDialog = new ListDialog(RepairsCommitActivity.this, mChooseList, new ListDialog.LeaveMyDialogListener() {
                     @Override
                     public void onClick(BaseQuickAdapter adapter, View view, int position) {
                         tv_type.setText(mChooseList.get(position));
-                        cameraAndChooseDialog.dismiss();
+                        listDialog.dismiss();
                     }
                 });
-                cameraAndChooseDialog.show();
+                listDialog.show();
                 break;
 
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CAMERA && resultCode == RESULT_OK) {
+            Log.e("TAG", "拍照---------" + FileProvider.getUriForFile(this, "com.fhx.property.provider", file));
+//            imageView.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
+            imageList.add(file.getAbsolutePath());
+            chooseSize();
+
+            //在手机相册中显示刚拍摄的图片
+            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            Uri contentUri = Uri.fromFile(file);
+            mediaScanIntent.setData(contentUri);
+            sendBroadcast(mediaScanIntent);
+        }else if (requestCode == REQUEST_CODE_SELECT_IMG) {
+            showContent(data);
+            chooseSize();
+            return;
+        }
+
     }
 
     private void chooseSize(){
@@ -169,5 +196,42 @@ public class RepairsCommitActivity extends BaseActivity implements View.OnClickL
 
 
 
+    /**
+     * 初始化相机相关权限
+     * 适配6.0+手机的运行时权限
+     */
+    private File file;
+
+    private void useCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
+                + "/images/" + System.currentTimeMillis() + ".jpg");
+        file.getParentFile().mkdirs();
+        //改变Uri com.fhx.property.provider注意和xml中的一致
+        Uri uri = FileProvider.getUriForFile(this, "com.fhx.property.provider", file);
+        //添加权限
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        startActivityForResult(intent, REQUEST_CAMERA);
+    }
+
+    /**
+     * 选择图片回调
+     * @param data
+     */
+    private void showContent(Intent data) {
+        List<String> paths = ImageSelector.getImagePaths(data);
+        if (paths.isEmpty()) {
+            for (int i = 0; i < paths.size(); i++) {
+                imageList.add(paths.get(i));
+            }
+//            tv_mes.setText(paths.toString());
+            return;
+        }
+
+        for (int i = 0; i < paths.size(); i++) {
+            imageList.add(paths.get(i));
+        }
+    }
 
 }

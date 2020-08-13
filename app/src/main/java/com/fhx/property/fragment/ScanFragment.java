@@ -2,6 +2,7 @@ package com.fhx.property.fragment;
 
 import android.os.Vibrator;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,8 +21,10 @@ public class ScanFragment extends BaseFragment implements QRCodeView.Delegate {
 
     private TextView tv_home;
     private QRCodeView qrCodeView;
+    private ImageView image_light;
 //    private ZBarView zBarView;
 
+    private int isOpen =0; //是否开灯
     @Override
     public int setLayoutId() {
         return R.layout.fragment_scan;
@@ -31,6 +34,7 @@ public class ScanFragment extends BaseFragment implements QRCodeView.Delegate {
     public void findViewById(View view) {
         super.findViewById(view);
         tv_home =view.findViewById(R.id.tv_home);
+        image_light =view.findViewById(R.id.image_light);
         qrCodeView  = view.findViewById(R.id.qrZBar);
         qrCodeView.setDelegate(this);
     }
@@ -38,6 +42,23 @@ public class ScanFragment extends BaseFragment implements QRCodeView.Delegate {
     @Override
     public void setViewData(View view) {
         super.setViewData(view);
+    }
+
+    @Override
+    public void setClickEvent(View view) {
+        super.setClickEvent(view);
+        image_light.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isOpen==0){
+                    qrCodeView.openFlashlight();//开灯
+                    isOpen=1;
+                }else if (isOpen==1){
+                    qrCodeView.closeFlashlight();//开灯
+                    isOpen=0;
+                }
+            }
+        });
     }
 
     @Override
@@ -53,6 +74,7 @@ public class ScanFragment extends BaseFragment implements QRCodeView.Delegate {
     public void onScanQRCodeOpenCameraError() {
         Toast.makeText(getContext(), "错误", Toast.LENGTH_SHORT).show();
     }
+
 
     @Override
     public void onStart() {

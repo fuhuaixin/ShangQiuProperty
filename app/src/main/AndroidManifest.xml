@@ -16,11 +16,23 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/icon_logo2"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:requestLegacyExternalStorage="true"
+        android:roundIcon="@mipmap/icon_logo2"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.fhx.property.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+
         <activity
             android:name=".MainActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -30,6 +42,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--闪屏-->
+        <activity
+            android:name=".activity.login.SplashActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
+        </activity>
+
+        <!--登录界面-->
+        <activity
+            android:name=".activity.login.LoginActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
         <!--报修-->
         <activity
             android:name=".activity.RepairsActivity"
@@ -47,46 +71,105 @@
             android:name=".activity.RepairsCommitActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--设备管理-->
-        <activity android:name=".activity.EquManageActivity"
+        <activity
+            android:name=".activity.EquManageActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--背景音乐 广播-->
-        <activity android:name=".activity.BroadcastActivity"
+        <activity
+            android:name=".activity.BroadcastActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--背景音乐 广播 详情-->
-        <activity android:name=".activity.BroadcastMsgActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".activity.BroadcastMsgActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--临时播放设置-->
-        <activity android:name=".activity.BroadTempActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".activity.BroadTempActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--信息发布列表-->
-        <activity android:name=".activity.InformationActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".activity.InformationActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--信息发布列表详情-->
-        <activity android:name=".activity.InformationMsgActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".activity.InformationMsgActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--信息发布时间实在-->
-        <activity android:name=".activity.InformationTempActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".activity.InformationTempActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--智能照明-->
-        <activity android:name=".activity.LightActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".activity.LightActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--智能照明设置-->
-        <activity android:name=".activity.LightSettingActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".activity.LightSettingActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--水泵 新风 排风 列表页-->
-        <activity android:name=".activity.WaterPumpActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".activity.WaterPumpActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--新风 排风通用详情页-->
-        <activity android:name=".activity.FreshVentilateActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".activity.FreshVentilateActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--集水坑详情页-->
-        <activity android:name=".activity.WaterPumpMsgActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".activity.WaterPumpMsgActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--维护记录-->
-        <activity android:name=".activity.MaintainRecordActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-
-
+        <activity
+            android:name=".activity.MaintainRecordActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--账单催缴-->
+        <activity
+            android:name=".activity.ReminderActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--账单详情-->
+        <activity
+            android:name=".activity.ReminderMsgActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--租赁管理列表-->
+        <activity
+            android:name=".activity.LeaseListActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--租赁详情-->
+        <activity
+            android:name=".activity.LeaseMsgActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+        <!--车辆管理列表-->
+        <activity
+            android:name=".activity.CarManageActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--车辆详情页面-->
+        <activity
+            android:name=".activity.CarMsgActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--通讯录-->
+        <activity
+            android:name=".activity.ContactsActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--通讯录人员详情-->
+        <activity
+            android:name=".activity.ContactsMsgActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--通知列表-->
+        <activity
+            android:name=".activity.NotifyListActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--通用web页面-->
+        <activity
+            android:name=".activity.WebActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--修改密码-->
+        <activity
+            android:name=".activity.mine.ChangePasswordActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--投诉反馈-->
+        <activity
+            android:name=".activity.mine.FeedbackActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 
 </manifest>

@@ -281,7 +281,7 @@
                 android:background="@drawable/shape_search_bg"
                 android:gravity="center"
                 android:text="删除临时播放"
-                android:textColor="@color/oa_center"
+                android:textColor="@color/col_red"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 

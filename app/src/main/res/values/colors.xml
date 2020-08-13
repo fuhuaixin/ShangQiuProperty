@@ -12,10 +12,11 @@
     <color name="tvaaa">#aaaaaa</color>
 
     <color name="bot_text">#00a0c3</color>
-    <color name="oa_center">#ff5454</color>
+    <color name="col_red">#ff5454</color>
     <color name="col_search">#f2f2f2</color>
     <color name="col_repairs_blue">#05e9fd</color>
     <color name="col_d9">#d9d9d9</color>
+    <color name="col_e5">#e5e5e5</color>
 
 
 </resources>

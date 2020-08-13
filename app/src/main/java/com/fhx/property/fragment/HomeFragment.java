@@ -1,9 +1,9 @@
 package com.fhx.property.fragment;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -14,14 +14,19 @@ import androidx.viewpager.widget.ViewPager;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.fhx.property.R;
+import com.fhx.property.activity.CarManageActivity;
+import com.fhx.property.activity.ContactsActivity;
 import com.fhx.property.activity.EquManageActivity;
+import com.fhx.property.activity.LeaseListActivity;
+import com.fhx.property.activity.NotifyListActivity;
+import com.fhx.property.activity.ReminderActivity;
 import com.fhx.property.activity.RepairsActivity;
 import com.fhx.property.adapter.HomeNavAdapter;
 import com.fhx.property.adapter.HomeTaskAdapter;
 import com.fhx.property.base.BaseFragment;
 import com.fhx.property.bean.HomeNavBean;
 import com.fhx.property.bean.HomeTaskBean;
-import com.fhx.property.utils.CameraAndChooseDialog;
+import com.fhx.property.utils.ListDialog;
 import com.fhx.property.utils.CutToUtils;
 import com.to.aboomy.banner.Banner;
 import com.to.aboomy.banner.HolderCreator;
@@ -33,12 +38,13 @@ import java.util.List;
 /**
  * 首页Fragment
  */
-public class HomeFragment extends BaseFragment {
+public class HomeFragment extends BaseFragment implements View.OnClickListener{
 
-    private CameraAndChooseDialog cameraAndChooseDialog;
+    private ListDialog listDialog;
     private Banner home_banner;
     private RecyclerView recycle_nav;
     private RecyclerView recycle_task;
+    private RelativeLayout rl_notify_list;
     //banner list
 //    private List<String> bannerList =new ArrayList<>();
     private List<Integer> bannerList =new ArrayList<>();
@@ -58,6 +64,7 @@ public class HomeFragment extends BaseFragment {
         home_banner =view.findViewById(R.id.home_banner);
         recycle_nav =view.findViewById(R.id.recycle_nav);
         recycle_task =view.findViewById(R.id.recycle_task);
+        rl_notify_list =view.findViewById(R.id.rl_notify_list);
     }
 
     @Override
@@ -82,8 +89,8 @@ public class HomeFragment extends BaseFragment {
 
         homeNavAdapter =new HomeNavAdapter(homeNavBeanList);
 
-        bannerList.add(R.mipmap.image_banner);
-        bannerList.add(R.mipmap.image_banner);
+        bannerList.add(R.mipmap.image_banners);
+        bannerList.add(R.mipmap.image_banners);
 
         recycle_nav.setLayoutManager(new GridLayoutManager(getContext(),5));
         recycle_nav.setAdapter(homeNavAdapter);
@@ -93,7 +100,7 @@ public class HomeFragment extends BaseFragment {
         recycle_task.setLayoutManager(new LinearLayoutManager(getContext()));
         recycle_task.setAdapter(homeTaskAdapter);
 
-        cameraAndChooseDialog = new CameraAndChooseDialog(getActivity(), dialogList, new CameraAndChooseDialog.LeaveMyDialogListener() {
+        listDialog = new ListDialog(getActivity(), dialogList, new ListDialog.LeaveMyDialogListener() {
             @Override
             public void onClick(BaseQuickAdapter adapter, View view, int position) {
 
@@ -111,7 +118,7 @@ public class HomeFragment extends BaseFragment {
                     public View createView(Context context, final int index, Object o) {
                         ImageView iv = new ImageView(context);
                         iv.setScaleType(ImageView.ScaleType.FIT_XY);
-                        Glide.with(context).load(o).into(iv);
+                        Glide.with(context).load(o).skipMemoryCache(true).into(iv);
                         iv.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -137,6 +144,14 @@ public class HomeFragment extends BaseFragment {
                     CutToUtils.getInstance().JumpTo(getActivity(), RepairsActivity.class);
                 }else if (homeNavBeanList.get(position).getTitle().equals("设备管理")){
                     CutToUtils.getInstance().JumpTo(getActivity(), EquManageActivity.class);
+                }else if (homeNavBeanList.get(position).getTitle().equals("费用催缴")){
+                    CutToUtils.getInstance().JumpTo(getActivity(), ReminderActivity.class);
+                }else if (homeNavBeanList.get(position).getTitle().equals("租赁管理")){
+                    CutToUtils.getInstance().JumpTo(getActivity(), LeaseListActivity.class);
+                }else if (homeNavBeanList.get(position).getTitle().equals("车辆管理")){
+                    CutToUtils.getInstance().JumpTo(getActivity(), CarManageActivity.class);
+                }else if (homeNavBeanList.get(position).getTitle().equals("通讯录")){
+                    CutToUtils.getInstance().JumpTo(getActivity(), ContactsActivity.class);
                 }
                 Toast.makeText(getContext(), "点击了"+position, Toast.LENGTH_SHORT).show();
             }
@@ -161,7 +176,7 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void onPageSelected(int position) {
-                Log.e("fhxx","轮播到了"+position);
+//                Log.e("fhxx","轮播到了"+position);
             }
 
             @Override
@@ -169,12 +184,16 @@ public class HomeFragment extends BaseFragment {
 
             }
         });
+        rl_notify_list.setOnClickListener(this);
     }
 
-    public void ViewClick(View view) {
-        switch (view.getId()) {
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.rl_notify_list:
+                CutToUtils.getInstance().JumpTo(getActivity(), NotifyListActivity.class);
+                break;
         }
     }
-
 }

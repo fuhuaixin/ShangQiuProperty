@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * 图片选择 和 照片选择dialog
  */
-public class CameraAndChooseDialog extends Dialog implements View.OnClickListener, BaseQuickAdapter.OnItemChildClickListener {
+public class ListDialog extends Dialog implements View.OnClickListener, BaseQuickAdapter.OnItemChildClickListener {
 
 
     private Context mContext;
@@ -38,13 +38,13 @@ public class CameraAndChooseDialog extends Dialog implements View.OnClickListene
     private ChooseAdapter adapter;
     private List<String > chooseList = new ArrayList<>();
 
-    public CameraAndChooseDialog(@NonNull Context context) {
-        super(context, R.style.CustomDialog);
+    public ListDialog(@NonNull Context context) {
+        super(context, R.style.ListDialog);
 
     }
 
-    public CameraAndChooseDialog(@NonNull Context context,List<String> chooseList,LeaveMyDialogListener listener) {
-        super(context, R.style.CustomDialog);
+    public ListDialog(@NonNull Context context, List<String> chooseList, LeaveMyDialogListener listener) {
+        super(context, R.style.ListDialog);
         this.mContext =context;
         this.chooseList =chooseList;
         this.listener =listener;
