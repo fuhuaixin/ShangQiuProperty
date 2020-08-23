@@ -3,6 +3,7 @@ package com.fhx.property.fragment;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import com.fhx.property.R;
 import com.fhx.property.activity.CarManageActivity;
 import com.fhx.property.activity.ContactsActivity;
 import com.fhx.property.activity.EquManageActivity;
+import com.fhx.property.activity.FaultNotifiActivity;
 import com.fhx.property.activity.LeaseListActivity;
 import com.fhx.property.activity.NotifyListActivity;
 import com.fhx.property.activity.ReminderActivity;
@@ -53,6 +55,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
     private List<HomeNavBean> homeNavBeanList =new ArrayList<>();
     private List<HomeTaskBean> homeTaskBeanList =new ArrayList<>();
     private List<String> dialogList = new ArrayList<>();
+    private LinearLayout ll_fault_notifi;
     @Override
     public int setLayoutId() {
         return R.layout.fragment_home;
@@ -65,6 +68,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
         recycle_nav =view.findViewById(R.id.recycle_nav);
         recycle_task =view.findViewById(R.id.recycle_task);
         rl_notify_list =view.findViewById(R.id.rl_notify_list);
+        ll_fault_notifi =view.findViewById(R.id.ll_fault_notifi);
     }
 
     @Override
@@ -185,6 +189,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
             }
         });
         rl_notify_list.setOnClickListener(this);
+        ll_fault_notifi.setOnClickListener(this);
     }
 
 
@@ -193,6 +198,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
         switch (v.getId()){
             case R.id.rl_notify_list:
                 CutToUtils.getInstance().JumpTo(getActivity(), NotifyListActivity.class);
+                break;
+            case R.id.ll_fault_notifi:
+                CutToUtils.getInstance().JumpTo(getActivity(), FaultNotifiActivity.class);
                 break;
         }
     }

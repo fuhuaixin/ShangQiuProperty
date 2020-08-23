@@ -3,6 +3,7 @@ package com.fhx.property.activity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,6 +28,13 @@ public class CarManageActivity extends BaseActivity implements View.OnClickListe
     private TextView tvTitle;
     private ImageView imageLeft;
     private RecyclerView recyclerCar;
+
+    /*空界面*/
+    private LinearLayout ll_empty;
+    private ImageView image_top;
+    private TextView tv_msg;
+    private TextView tv_btn;
+
     private CarManageAdapter adapter;
     private List<CarManageBean> mList = new ArrayList<>();
 
@@ -41,6 +49,11 @@ public class CarManageActivity extends BaseActivity implements View.OnClickListe
         tvTitle = (TextView) findViewById(R.id.tv_title);
         imageLeft = (ImageView) findViewById(R.id.image_left);
         recyclerCar = (RecyclerView) findViewById(R.id.recycle_reminder);
+
+        ll_empty = (LinearLayout) findViewById(R.id.ll_empty);
+        image_top = (ImageView) findViewById(R.id.image_top);
+        tv_msg = (TextView) findViewById(R.id.tv_msg);
+        tv_btn = (TextView) findViewById(R.id.tv_btn);
     }
 
     @Override
@@ -51,6 +64,17 @@ public class CarManageActivity extends BaseActivity implements View.OnClickListe
         for (int i = 0; i < 6; i++) {
             mList.add(new CarManageBean("豫A8888" + i, "车主名字" + i, "房间号" + i));
         }
+
+        if (mList.size()>0){
+            ll_empty.setVisibility(View.GONE);
+        }else {
+            ll_empty.setVisibility(View.VISIBLE);
+            image_top.setImageResource(R.mipmap.icon_empty_car);
+            tv_msg.setText("暂无登记车辆");
+//            tv_btn.setVisibility(View.VISIBLE);
+//            tv_btn.setText("我要报修");
+        }
+
         adapter = new CarManageAdapter(mList);
         recyclerCar.setLayoutManager(new LinearLayoutManager(this));
         recyclerCar.setAdapter(adapter);

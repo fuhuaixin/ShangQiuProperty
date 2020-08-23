@@ -130,6 +130,14 @@
         <activity
             android:name=".activity.ReminderMsgActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--故障通知-->
+        <activity
+            android:name=".activity.FaultNotifiActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--故障详情-->
+        <activity
+            android:name=".activity.FaultNotifiMsgActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--租赁管理列表-->
         <activity
             android:name=".activity.LeaseListActivity"

@@ -3,6 +3,7 @@ package com.fhx.property.activity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -28,8 +29,13 @@ public class ReminderActivity extends BaseActivity implements View.OnClickListen
     private TextView tvTitle;
     private RecyclerView recycle_reminder;
 
-    private ReminderListAdapter adapter;
+    /*空界面*/
+    private LinearLayout ll_empty;
+    private ImageView image_top;
+    private TextView tv_msg;
+    private TextView tv_btn;
 
+    private ReminderListAdapter adapter;
     private List<ReminderListBean> mList = new ArrayList<>();
 
     @Override
@@ -43,6 +49,11 @@ public class ReminderActivity extends BaseActivity implements View.OnClickListen
         imageRight = (ImageView) findViewById(R.id.image_right);
         tvTitle = (TextView) findViewById(R.id.tv_title);
         recycle_reminder = (RecyclerView) findViewById(R.id.recycle_reminder);
+
+        ll_empty = (LinearLayout) findViewById(R.id.ll_empty);
+        image_top = (ImageView) findViewById(R.id.image_top);
+        tv_msg = (TextView) findViewById(R.id.tv_msg);
+        tv_btn = (TextView) findViewById(R.id.tv_btn);
     }
 
     @Override
@@ -57,8 +68,18 @@ public class ReminderActivity extends BaseActivity implements View.OnClickListen
                 mList.add(new ReminderListBean("标题"+i,"￥"+2000+i,"房号：room"+i,1));
             }
         }
-        adapter =new ReminderListAdapter(mList);
 
+        if (mList.size()>0){
+            ll_empty.setVisibility(View.GONE);
+        }else {
+            ll_empty.setVisibility(View.VISIBLE);
+            image_top.setImageResource(R.mipmap.icon_empty_pay);
+            tv_msg.setText("暂无催缴费用");
+//            tv_btn.setVisibility(View.VISIBLE);
+//            tv_btn.setText("我要报修");
+        }
+
+        adapter =new ReminderListAdapter(mList);
         recycle_reminder.setLayoutManager(new LinearLayoutManager(this));
         recycle_reminder.setAdapter(adapter);
 

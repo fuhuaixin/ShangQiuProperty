@@ -4,6 +4,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,6 +30,12 @@ public class NotifyListActivity extends BaseActivity {
     private EditText etSearch;
     private RecyclerView recycleNotify;
 
+    /*空界面*/
+    private LinearLayout ll_empty;
+    private ImageView image_top;
+    private TextView tv_msg;
+    private TextView tv_btn;
+
     private NotifyListAdapter adapter;
     private List<NotifyListBean> mList =new ArrayList<>();
     @Override
@@ -42,6 +49,11 @@ public class NotifyListActivity extends BaseActivity {
         tvTitle = (TextView) findViewById(R.id.tv_title);
         etSearch = (EditText) findViewById(R.id.et_search);
         recycleNotify = (RecyclerView) findViewById(R.id.recycle_reminder);
+
+        ll_empty = (LinearLayout) findViewById(R.id.ll_empty);
+        image_top = (ImageView) findViewById(R.id.image_top);
+        tv_msg = (TextView) findViewById(R.id.tv_msg);
+        tv_btn = (TextView) findViewById(R.id.tv_btn);
     }
 
     @Override
@@ -52,6 +64,16 @@ public class NotifyListActivity extends BaseActivity {
         recycleNotify.setLayoutManager(new LinearLayoutManager(this));
         for (int i = 0; i < 7; i++) {
             mList.add(new NotifyListBean("标题"+i,"msg"+i,"时间"+i,"部门"));
+        }
+
+        if (mList.size()>0){
+            ll_empty.setVisibility(View.GONE);
+        }else {
+            ll_empty.setVisibility(View.VISIBLE);
+            image_top.setImageResource(R.mipmap.icon_empty_notice);
+            tv_msg.setText("暂无公告");
+//            tv_btn.setVisibility(View.VISIBLE);
+//            tv_btn.setText("我要报修");
         }
         adapter = new NotifyListAdapter(mList);
         recycleNotify.setAdapter(adapter);

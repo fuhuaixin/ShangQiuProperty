@@ -57,4 +57,11 @@
         android:textColor="@color/bot_text"
         android:textSize="16sp" />
 
+    <include
+        android:visibility="gone"
+        android:layout_below="@+id/include_title"
+        layout="@layout/layout_empty"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent" />
+
 </RelativeLayout>

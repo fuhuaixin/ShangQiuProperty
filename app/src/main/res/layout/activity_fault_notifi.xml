@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical">
-
-    <include layout="@layout/include_activity_title" />
+    android:orientation="vertical"
+    android:background="@color/white">
 
     <include
-        layout="@layout/layout_empty"
-        android:visibility="gone" />
-
+        android:id="@+id/include_title"
+        layout="@layout/include_activity_title" />
     <LinearLayout
         android:id="@+id/ll_search"
         android:layout_width="match_parent"
@@ -31,17 +28,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@null"
-            android:hint="搜索用户及房号"
+            android:hint="搜索故障通知"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:textColor="@color/tv333"
             android:textColorHint="@color/tv888"
             android:textSize="14sp" />
     </LinearLayout>
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycle_reminder"
+        android:id="@+id/recycle_fault"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 
 </LinearLayout>

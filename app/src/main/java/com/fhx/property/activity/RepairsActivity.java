@@ -2,6 +2,7 @@ package com.fhx.property.activity;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,6 +31,13 @@ public class RepairsActivity extends BaseActivity implements View.OnClickListene
     private List<RepairsCommitBean> repairsBeanList = new ArrayList<>();
     private RepairsCommitAdapter repairsCommitAdapter;
 
+    /*空界面*/
+    private LinearLayout ll_empty;
+    private ImageView image_top;
+    private TextView tv_msg;
+    private TextView tv_btn;
+
+
     @Override
     protected int initLayout() {
         return R.layout.activity_repairs;
@@ -41,6 +49,13 @@ public class RepairsActivity extends BaseActivity implements View.OnClickListene
         tv_to_repairs = (TextView) findViewById(R.id.tv_to_repairs);
         imageBack = (ImageView)findViewById(R.id.image_left);
         recycle_repairs = (RecyclerView) findViewById(R.id.recycle_repairs);
+
+        ll_empty = (LinearLayout) findViewById(R.id.ll_empty);
+        image_top = (ImageView) findViewById(R.id.image_top);
+        tv_msg = (TextView) findViewById(R.id.tv_msg);
+        tv_btn = (TextView) findViewById(R.id.tv_btn);
+
+
     }
 
     @Override
@@ -57,6 +72,16 @@ public class RepairsActivity extends BaseActivity implements View.OnClickListene
         repairsBeanList.add(new RepairsCommitBean("办公室电动玻璃门无法关闭","类型1","房间3",3));
         repairsBeanList.add(new RepairsCommitBean("办公室电动玻璃门无法关闭","类型2","房间4",4));
 
+        if (repairsBeanList.size()>0){
+            ll_empty.setVisibility(View.GONE);
+        }else {
+            ll_empty.setVisibility(View.VISIBLE);
+            image_top.setImageResource(R.mipmap.icon_empty_repairs);
+            tv_msg.setText("暂无报修");
+            tv_btn.setVisibility(View.VISIBLE);
+            tv_btn.setText("我要报修");
+        }
+
         repairsCommitAdapter =new RepairsCommitAdapter(repairsBeanList);
         recycle_repairs.setLayoutManager(new LinearLayoutManager(this));
         recycle_repairs.setAdapter(repairsCommitAdapter);
@@ -66,6 +91,7 @@ public class RepairsActivity extends BaseActivity implements View.OnClickListene
     protected void initListen() {
         imageBack.setOnClickListener(this);
         tv_to_repairs.setOnClickListener(this);
+        tv_btn.setOnClickListener(this);
 
         repairsCommitAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
@@ -84,6 +110,7 @@ public class RepairsActivity extends BaseActivity implements View.OnClickListene
                 overridePendingTransition(R.anim.activity_out_from_animation,R.anim.activity_out_to_animation);
                 break;
             case R.id.tv_to_repairs:
+            case R.id.tv_btn:
                 CutToUtils.getInstance().JumpTo(RepairsActivity.this,RepairsCommitActivity.class);
                 break;
         }

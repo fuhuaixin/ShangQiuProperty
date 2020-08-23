@@ -2,6 +2,7 @@ package com.fhx.property.activity;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +26,12 @@ public class LeaseListActivity extends BaseActivity implements View.OnClickListe
     private TextView tvTitle;
     private RecyclerView recycle_lease;
 
+    /*空界面*/
+    private LinearLayout ll_empty;
+    private ImageView image_top;
+    private TextView tv_msg;
+    private TextView tv_btn;
+
     private LeaseListAdapter adapter;
     private List<LeaseListBean> mList =new ArrayList<>();
 
@@ -38,6 +45,11 @@ public class LeaseListActivity extends BaseActivity implements View.OnClickListe
         imageLeft = (ImageView) findViewById(R.id.image_left);
         tvTitle = (TextView) findViewById(R.id.tv_title);
         recycle_lease = (RecyclerView) findViewById(R.id.recycle_reminder);
+
+        ll_empty = (LinearLayout) findViewById(R.id.ll_empty);
+        image_top = (ImageView) findViewById(R.id.image_top);
+        tv_msg = (TextView) findViewById(R.id.tv_msg);
+        tv_btn = (TextView) findViewById(R.id.tv_btn);
     }
 
     @Override
@@ -46,6 +58,17 @@ public class LeaseListActivity extends BaseActivity implements View.OnClickListe
         for (int i = 0; i < 7; i++) {
             mList.add(new LeaseListBean("title"+i,"房号：room"+i));
         }
+
+        if (mList.size()>0){
+            ll_empty.setVisibility(View.GONE);
+        }else {
+            ll_empty.setVisibility(View.VISIBLE);
+            image_top.setImageResource(R.mipmap.icon_empty_lease);
+            tv_msg.setText("暂无登记租户");
+//            tv_btn.setVisibility(View.VISIBLE);
+//            tv_btn.setText("我要报修");
+        }
+
         adapter =new LeaseListAdapter(mList);
         recycle_lease.setLayoutManager(new LinearLayoutManager(this));
         recycle_lease.setAdapter(adapter);
