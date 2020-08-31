@@ -24,6 +24,7 @@
                 android:layout_height="wrap_content"/>
 
             <ImageView
+                android:id="@+id/image_weather"
                 android:layout_marginRight="18dp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"

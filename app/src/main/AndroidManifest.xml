@@ -35,6 +35,7 @@
 
         <activity
             android:name=".MainActivity"
+            android:launchMode="singleTask"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -138,6 +139,10 @@
         <activity
             android:name=".activity.FaultNotifiMsgActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--指派处理人-->
+        <activity
+            android:name=".activity.AssignedHandlerActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--租赁管理列表-->
         <activity
             android:name=".activity.LeaseListActivity"
@@ -177,6 +182,34 @@
         <!--投诉反馈-->
         <activity
             android:name=".activity.mine.FeedbackActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--修改个人信息-->
+        <activity
+            android:name=".activity.mine.ChangeDetailsActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--更换手机号-->
+        <activity
+            android:name=".activity.mine.ChangeNumberActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--更换手机号输入验证码-->
+        <activity
+            android:name=".activity.mine.ChangeCodeActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--修改手机号结果页-->
+        <activity
+            android:name=".activity.mine.ChangeResultActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--读写日志-->
+        <activity
+            android:name=".activity.mine.WorkDiaryActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--填写日志-->
+        <activity
+            android:name=".activity.mine.CommitLogActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--日志详情-->
+        <activity
+            android:name=".activity.mine.ReadLogMsgActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 

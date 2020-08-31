@@ -20,8 +20,8 @@ import com.fhx.property.utils.CutToUtils;
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
     private LinearLayout ll_user, ll_password;
-    private ImageView image_user, image_password, image_user_del, image_password_del, image_login;
-    private TextView tv_forget;
+    private ImageView image_user, image_password, image_user_del, image_password_del;
+    private TextView tv_forget, image_login;
     private EditText edit_password, edit_user;
 
     @Override
@@ -37,7 +37,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         image_password = (ImageView) findViewById(R.id.image_password);
         image_user_del = (ImageView) findViewById(R.id.image_user_del);
         image_password_del = (ImageView) findViewById(R.id.image_password_del);
-        image_login = (ImageView) findViewById(R.id.image_login);
+        image_login = (TextView) findViewById(R.id.image_login);
         tv_forget = (TextView) findViewById(R.id.tv_forget);
         edit_user = (EditText) findViewById(R.id.edit_user);
         edit_password = (EditText) findViewById(R.id.edit_password);

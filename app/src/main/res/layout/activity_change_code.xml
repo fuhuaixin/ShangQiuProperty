@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/white">
+    <include layout="@layout/include_activity_title" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="45dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="45dp"
+        android:text="请输入要更换的手机号码"
+        android:textColor="@color/tv333"
+        android:textSize="36dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="45dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginRight="45dp"
+        android:layout_marginBottom="55dp"
+        android:text="当前手机号为15637002548"
+        android:textColor="@color/tvaaa"
+        android:textSize="14sp" />
+
+    <com.tuo.customview.VerificationCodeView
+        android:id="@+id/icv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        app:icv_et_bg_focus="@drawable/shape_icv_et_bg_focus"
+        app:icv_et_bg_normal="@drawable/shape_icv_et_bg_normal"
+        app:icv_et_divider_drawable="@drawable/shape_divider_identifying"
+        app:icv_et_number="6"
+        app:icv_et_width="40dp" />
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="45dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginRight="45dp"
+        android:layout_marginBottom="55dp"
+        android:text="59s后可重新发送验证码"
+        android:textColor="@color/tvaaa"
+        android:textSize="14sp" />
+
+</LinearLayout>

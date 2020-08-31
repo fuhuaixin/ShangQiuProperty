@@ -1,7 +1,10 @@
 package com.fhx.property.fragment;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -47,6 +50,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
     private RecyclerView recycle_nav;
     private RecyclerView recycle_task;
     private RelativeLayout rl_notify_list;
+    private ImageView image_weather;
     //banner list
 //    private List<String> bannerList =new ArrayList<>();
     private List<Integer> bannerList =new ArrayList<>();
@@ -69,6 +73,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
         recycle_task =view.findViewById(R.id.recycle_task);
         rl_notify_list =view.findViewById(R.id.rl_notify_list);
         ll_fault_notifi =view.findViewById(R.id.ll_fault_notifi);
+        image_weather =view.findViewById(R.id.image_weather);
     }
 
     @Override
@@ -190,6 +195,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
         });
         rl_notify_list.setOnClickListener(this);
         ll_fault_notifi.setOnClickListener(this);
+        image_weather.setOnClickListener(this);
     }
 
 
@@ -201,6 +207,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
                 break;
             case R.id.ll_fault_notifi:
                 CutToUtils.getInstance().JumpTo(getActivity(), FaultNotifiActivity.class);
+                break;
+            case R.id.image_weather:
+
                 break;
         }
     }

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@mipmap/image_work_diary_bot">
+
+        <RadioGroup
+            android:id="@+id/rg_log"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_write"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:checked="true"
+                android:drawableTop="@drawable/selector_log_write"
+                android:gravity="center"
+                android:paddingTop="10dp"
+                android:text="写日志"
+                android:textColor="@drawable/bottom_button_text_selector"
+                android:textSize="10sp" />
+
+            <RadioButton
+                android:id="@+id/rb_read"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/selector_log_read"
+                android:gravity="center"
+                android:paddingTop="10dp"
+                android:text="看日志"
+                android:textColor="@drawable/bottom_button_text_selector"
+                android:textSize="10sp" />
+        </RadioGroup>
+    </RelativeLayout>
+
+
+</LinearLayout>

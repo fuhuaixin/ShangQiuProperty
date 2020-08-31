@@ -47,6 +47,7 @@
                 android:layout_marginTop="10dp" />
 
             <RelativeLayout
+                android:id="@+id/rl_change_msg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_mine"

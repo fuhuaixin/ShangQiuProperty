@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.fhx.property.R;
 import com.fhx.property.base.BaseActivity;
+import com.fhx.property.utils.CutToUtils;
 
 /**
  * z故障详情
@@ -16,6 +17,7 @@ public class FaultNotifiMsgActivity extends BaseActivity implements View.OnClick
     private ImageView image_left,image_bg;
     private TextView tv_address,tv_time;
     private LinearLayout ll_bot_one,ll_bot_two,ll_bot_three;
+    private ImageView image_add_people;
 
     private int type;
 
@@ -34,6 +36,8 @@ public class FaultNotifiMsgActivity extends BaseActivity implements View.OnClick
         ll_bot_one = (LinearLayout) findViewById(R.id.ll_bot_one);
         ll_bot_two = (LinearLayout) findViewById(R.id.ll_bot_two);
         ll_bot_three = (LinearLayout) findViewById(R.id.ll_bot_three);
+
+        image_add_people = (ImageView) findViewById(R.id.image_add_people);
 
 
     }
@@ -60,6 +64,7 @@ public class FaultNotifiMsgActivity extends BaseActivity implements View.OnClick
     @Override
     protected void initListen() {
         image_left.setOnClickListener(this);
+        image_add_people.setOnClickListener(this);
     }
 
     @Override
@@ -68,6 +73,9 @@ public class FaultNotifiMsgActivity extends BaseActivity implements View.OnClick
             case R.id.image_left:
                 finish();
                 overridePendingTransition(R.anim.activity_out_from_animation,R.anim.activity_out_to_animation);
+                break;
+            case R.id.image_add_people:
+                CutToUtils.getInstance().JumpTo(FaultNotifiMsgActivity.this,AssignedHandlerActivity.class);
                 break;
         }
     }

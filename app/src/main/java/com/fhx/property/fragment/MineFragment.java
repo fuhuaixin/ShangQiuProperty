@@ -2,6 +2,7 @@ package com.fhx.property.fragment;
 
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,8 +13,10 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.fhx.property.MainActivity;
 import com.fhx.property.R;
 import com.fhx.property.activity.WebActivity;
+import com.fhx.property.activity.mine.ChangeDetailsActivity;
 import com.fhx.property.activity.mine.ChangePasswordActivity;
 import com.fhx.property.activity.mine.FeedbackActivity;
+import com.fhx.property.activity.mine.WorkDiaryActivity;
 import com.fhx.property.adapter.MineOAAdapter;
 import com.fhx.property.base.BaseFragment;
 import com.fhx.property.bean.MineOABean;
@@ -35,6 +38,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private LinearLayout ll_change_password, ll_feedback,ll_about_us;
     private TextView tv_logout;
     private View view_help;
+    private RelativeLayout rl_change_msg;
 
     @Override
     public int setLayoutId() {
@@ -50,6 +54,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         ll_about_us = view.findViewById(R.id.ll_about_us);
         tv_logout = view.findViewById(R.id.tv_logout);
         view_help = view.findViewById(R.id.view_help);
+        rl_change_msg = view.findViewById(R.id.rl_change_msg);
     }
 
     @Override
@@ -76,12 +81,17 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         ll_feedback.setOnClickListener(this);
         ll_about_us.setOnClickListener(this);
         view_help.setOnClickListener(this);
+        rl_change_msg.setOnClickListener(this);
 
         tv_logout.setOnClickListener(this);
         mineOAAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                Toast.makeText(getContext(), "dinaji le " + position, Toast.LENGTH_SHORT).show();
+                switch (mineOABeanList.get(position).getTitle()){
+                    case "日志":
+                        CutToUtils.getInstance().JumpTo(getActivity(), WorkDiaryActivity.class);
+                        break;
+                }
             }
         });
 
@@ -104,6 +114,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.tv_logout://登出
                 initDialog();
+                break;
+            case R.id.rl_change_msg://登出
+               CutToUtils.getInstance().JumpTo(getActivity(), ChangeDetailsActivity.class);
                 break;
         }
     }
