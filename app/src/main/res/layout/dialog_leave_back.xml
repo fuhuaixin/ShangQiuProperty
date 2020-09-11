@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_all"
+    android:orientation="vertical"
+    android:layout_marginLeft="15dp"
+    android:layout_marginRight="15dp"
+    android:padding="15dp">
+
+    <TextView
+        android:textSize="18sp"
+        android:textColor="@color/tv333"
+        android:textStyle="bold"
+        android:text="退回意见"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    
+    <EditText
+        android:textColorHint="@color/tvaaa"
+        android:textColor="@color/tv333"
+        android:layout_marginTop="20dp"
+        android:hint="请填写退回意见"
+        android:textSize="14sp"
+        android:gravity="top"
+        android:padding="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="80dp"
+        android:background="@drawable/shape_fault_progress_bg"/>
+
+    <LinearLayout
+        android:paddingTop="20dp"
+        android:paddingBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+        android:id="@+id/tv_cancel"
+        android:textStyle="bold"
+        android:textColor="@color/tvaaa"
+        android:textSize="17sp"
+        android:text="取消"
+        android:gravity="center"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tv_back"
+            android:textStyle="bold"
+            android:textColor="@color/col_red"
+            android:textSize="17sp"
+            android:text="退回"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</LinearLayout>

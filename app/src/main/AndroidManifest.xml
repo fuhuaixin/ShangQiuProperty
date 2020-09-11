@@ -3,6 +3,13 @@
     package="com.fhx.property">
 
 
+    <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!-- 这个权限用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- 这个权限用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <uses-feature android:name="android.hardware.camera" /> <!-- 相机权限 -->
     <!--相机权限-->
     <uses-permission android:name="android.permission.CAMERA" />
@@ -15,6 +22,7 @@
     <uses-permission android:name="android.permission.FLASHLIGHT" />
 
     <application
+        android:name=".base.BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/icon_logo2"
         android:label="@string/app_name"
@@ -33,9 +41,22 @@
                 android:resource="@xml/filepaths" />
         </provider>
 
+
+        <service android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote"/>
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="rbUaQmRzQH1XQjDVYWZtHh9Re3mRUZMN" />
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTask"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
+        </activity>
+        <!--闪屏-->
+        <activity
+            android:name=".activity.login.SplashActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,18 +64,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--闪屏-->
-        <activity
-            android:name=".activity.login.SplashActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
-        </activity>
 
         <!--登录界面-->
         <activity
             android:name=".activity.login.LoginActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-
+        <!--扫一扫界面-->
+        <activity
+            android:name=".activity.ScanActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--报修-->
         <activity
             android:name=".activity.RepairsActivity"
@@ -171,10 +189,17 @@
         <activity
             android:name=".activity.NotifyListActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--环境监测-->
+        <activity
+            android:name=".activity.EnvironmentActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
         <!--通用web页面-->
         <activity
             android:name=".activity.WebActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+
         <!--修改密码-->
         <activity
             android:name=".activity.mine.ChangePasswordActivity"
@@ -211,6 +236,51 @@
         <activity
             android:name=".activity.mine.ReadLogMsgActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--薪资-->
+        <activity
+            android:name=".activity.mine.PayActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--薪资详情-->
+        <activity
+            android:name=".activity.mine.PayMsgActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--打卡-->
+        <activity
+            android:name=".activity.mine.ClockInActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--考勤统计-->
+        <activity
+            android:name=".activity.mine.RecordCheckActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--请假-->
+        <activity
+            android:name=".activity.mine.LeaveActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--提交请假-->
+        <activity
+            android:name=".activity.mine.LeaveCommitActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--提交记录-->
+        <activity
+            android:name=".activity.mine.LeaveRecordActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--请假详情-->
+        <activity
+            android:name=".activity.mine.LeaveMsgActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--审批界面-->
+        <activity
+            android:name=".activity.mine.ExamineActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--补卡-->
+        <activity
+            android:name=".activity.mine.MakeCardActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--补卡详情-->
+        <activity
+            android:name=".activity.mine.MakeCardMsgActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
     </application>
 
 </manifest>

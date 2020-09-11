@@ -19,5 +19,10 @@
     <color name="col_e5">#e5e5e5</color>
     <color name="bcffd4">#bcffd4</color>
 
+    <color name="leave_ing">#f97615</color>
+    <color name="leave_no_pass">#ff5454</color>
+    <color name="leave_pass">#2ed502</color>
+
+
 
 </resources>

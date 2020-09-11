@@ -20,6 +20,7 @@ public class CutToUtils {
 
     /**
      * 直接跳转 无需参数
+     *
      * @param context
      * @param activity
      */
@@ -31,6 +32,7 @@ public class CutToUtils {
 
     /**
      * 传递bean
+     *
      * @param context
      * @param activity
      * @param bean
@@ -45,6 +47,7 @@ public class CutToUtils {
 
     /**
      * 一个参数跳转
+     *
      * @param context
      * @param activity
      * @param jumpOne
@@ -57,7 +60,15 @@ public class CutToUtils {
 
     }
 
-    public void JumpToTwo(Activity context, Class<? extends Activity> activity, String jumpOne, String jumpTwo){
+    public void JumpToOne(Activity context, Class<? extends Activity> activity, int jumpOne) {
+        Intent intent = new Intent(context, activity);
+        intent.putExtra("jumpOne", jumpOne);
+        context.startActivity(intent);
+        context.overridePendingTransition(R.anim.activity_in_from_anim, R.anim.activity_in_to_anim);
+
+    }
+
+    public void JumpToTwo(Activity context, Class<? extends Activity> activity, String jumpOne, String jumpTwo) {
         Intent intent = new Intent(context, activity);
         intent.putExtra("jumpOne", jumpOne);
         intent.putExtra("jumpTwo", jumpTwo);
@@ -66,6 +77,14 @@ public class CutToUtils {
 
     }
 
+    public void JumpToTwo(Activity context, Class<? extends Activity> activity, int jumpOne, int jumpTwo) {
+        Intent intent = new Intent(context, activity);
+        intent.putExtra("jumpOne", jumpOne);
+        intent.putExtra("jumpTwo", jumpTwo);
+        context.startActivity(intent);
+        context.overridePendingTransition(R.anim.activity_in_from_anim, R.anim.activity_in_to_anim);
+
+    }
 
 
 }

@@ -10,8 +10,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.fhx.property.MainActivity;
 import com.fhx.property.R;
+import com.fhx.property.activity.mine.ClockInActivity;
+import com.fhx.property.activity.mine.ExamineActivity;
+import com.fhx.property.activity.mine.LeaveActivity;
+import com.fhx.property.activity.mine.MakeCardActivity;
+import com.fhx.property.activity.mine.PayActivity;
 import com.fhx.property.activity.WebActivity;
 import com.fhx.property.activity.mine.ChangeDetailsActivity;
 import com.fhx.property.activity.mine.ChangePasswordActivity;
@@ -90,6 +94,21 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 switch (mineOABeanList.get(position).getTitle()){
                     case "日志":
                         CutToUtils.getInstance().JumpTo(getActivity(), WorkDiaryActivity.class);
+                        break;
+                    case "薪资":
+                        CutToUtils.getInstance().JumpTo(getActivity(), PayActivity.class);
+                        break;
+                    case "打卡":
+                        CutToUtils.getInstance().JumpTo(getActivity(), ClockInActivity.class);
+                        break;
+                    case "请假":
+                        CutToUtils.getInstance().JumpTo(getActivity(), LeaveActivity.class);
+                        break;
+                    case "审批":
+                        CutToUtils.getInstance().JumpTo(getActivity(), ExamineActivity.class);
+                        break;
+                    case "补卡":
+                        CutToUtils.getInstance().JumpTo(getActivity(), MakeCardActivity.class);
                         break;
                 }
             }

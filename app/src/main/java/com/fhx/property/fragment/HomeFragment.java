@@ -20,6 +20,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.fhx.property.R;
 import com.fhx.property.activity.CarManageActivity;
 import com.fhx.property.activity.ContactsActivity;
+import com.fhx.property.activity.EnvironmentActivity;
 import com.fhx.property.activity.EquManageActivity;
 import com.fhx.property.activity.FaultNotifiActivity;
 import com.fhx.property.activity.LeaseListActivity;
@@ -209,7 +210,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
                 CutToUtils.getInstance().JumpTo(getActivity(), FaultNotifiActivity.class);
                 break;
             case R.id.image_weather:
-
+                CutToUtils.getInstance().JumpTo(getActivity(), EnvironmentActivity.class);
                 break;
         }
     }

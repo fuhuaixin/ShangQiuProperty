@@ -1,6 +1,5 @@
 package com.fhx.property;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -12,14 +11,16 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.view.View;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fhx.property.activity.ScanActivity;
 import com.fhx.property.fragment.HomeFragment;
 import com.fhx.property.fragment.MineFragment;
 import com.fhx.property.fragment.ScanFragment;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.fhx.property.utils.CutToUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private RadioGroup rg_home;
-    private List<Fragment> fragments =new ArrayList<>();
+    private List<Fragment> fragments = new ArrayList<>();
+    private TextView rb_scan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
      */
 
     private void initView() {
-        rg_home =findViewById(R.id.rg_home);
-
+        rg_home = findViewById(R.id.rg_home);
+        rb_scan = findViewById(R.id.rb_scan);
 
     }
 
@@ -69,11 +71,13 @@ public class MainActivity extends AppCompatActivity {
         String[] permissions = new String[]{Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.VIBRATE};
         if (Build.VERSION.SDK_INT >= 23) {
             if (ContextCompat.checkSelfPermission(this, permissions[0]) != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(this, permissions[1]) != PackageManager.PERMISSION_GRANTED||
-                    ContextCompat.checkSelfPermission(this, permissions[2]) != PackageManager.PERMISSION_GRANTED||
+                    ContextCompat.checkSelfPermission(this, permissions[1]) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(this, permissions[2]) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(this, permissions[4]) != PackageManager.PERMISSION_GRANTED ||
                     ContextCompat.checkSelfPermission(this, permissions[3]) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, permissions, 1);
             }
@@ -89,15 +93,14 @@ public class MainActivity extends AppCompatActivity {
         rg_home.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId){
+                switch (checkedId) {
                     case R.id.rb_home:
                         SwitchFragment(0);
 
                         break;
-                    case R.id.rb_scan:
-                        SwitchFragment(1);
-
-                        break;
+//                    case R.id.rb_scan:
+////                        SwitchFragment(1);
+//                        break;
                     case R.id.rb_mine:
                         SwitchFragment(2);
 
@@ -106,14 +109,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        rb_scan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CutToUtils.getInstance().JumpTo(MainActivity.this, ScanActivity.class);
+            }
+        });
     }
 
 
-    public void SwitchFragment(int i){
+    public void SwitchFragment(int i) {
         FragmentManager supportFragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frameLayout,fragments.get(i));
+        fragmentTransaction.replace(R.id.frameLayout, fragments.get(i));
         fragmentTransaction.commit();
     }
 
@@ -122,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private static final int TIME_EXIT = 2000;
     private long mBackPressed;
+
     @Override
     public void onBackPressed() {
         if (mBackPressed + TIME_EXIT > System.currentTimeMillis()) {
