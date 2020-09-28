@@ -20,8 +20,8 @@ public class LeaveMsgActivity extends BaseActivity implements View.OnClickListen
 
     private ImageView image_left;
     private ImageView image_type_header;
-    private TextView tv_progress,tv_back_cause,tv_leave_title,tv_commit_time,tv_back,tv_pass;
-    private LinearLayout ll_progress,ll_bottom;
+    private TextView tv_progress, tv_back_cause, tv_leave_title, tv_commit_time, tv_back, tv_pass;
+    private LinearLayout ll_progress, ll_bottom;
     private LeaveRecordBean leaveRecordBean;
     private int type; //1是看 2是处理
     private int progress;
@@ -49,12 +49,12 @@ public class LeaveMsgActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void initData() {
 //        leaveRecordBean = (LeaveRecordBean) getIntent().getSerializableExtra("bean");
-        type = getIntent().getIntExtra("jumpOne",0);
-        progress = getIntent().getIntExtra("jumpTwo",0);
-        Log.e("fhxx",type+"--- "+progress);
+        type = getIntent().getIntExtra("jumpOne", 0);
+        progress = getIntent().getIntExtra("jumpTwo", 0);
+        Log.e("fhxx", type + "--- " + progress);
 //        tv_leave_title.setText(leaveRecordBean.getTitle());
 //        tv_commit_time.setText(leaveRecordBean.getCommitTime());
-        switch (type){
+        switch (type) {
             case 1:
                 ll_progress.setVisibility(View.VISIBLE);
                 ll_bottom.setVisibility(View.GONE);
@@ -64,7 +64,7 @@ public class LeaveMsgActivity extends BaseActivity implements View.OnClickListen
                 ll_bottom.setVisibility(View.VISIBLE);
                 break;
         }
-        switch (progress){
+        switch (progress) {
             case 0:
                 tv_back_cause.setVisibility(View.GONE);
 
@@ -83,6 +83,8 @@ public class LeaveMsgActivity extends BaseActivity implements View.OnClickListen
                 image_type_header.setImageResource(R.mipmap.icon_leave_back);
 
                 break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + progress);
         }
 
     }
@@ -95,7 +97,7 @@ public class LeaveMsgActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.image_left:
                 finish();
                 overridePendingTransition(R.anim.activity_out_from_animation, R.anim.activity_out_to_animation);
@@ -107,14 +109,14 @@ public class LeaveMsgActivity extends BaseActivity implements View.OnClickListen
     }
 
 
-    private void backDialog(){
-        backDialog = new Dialog(LeaveMsgActivity.this,R.style.CustomDialog);
+    private void backDialog() {
+        backDialog = new Dialog(LeaveMsgActivity.this, R.style.CustomDialog);
         backDialog.setContentView(R.layout.dialog_leave_back);
         backDialog.show();
         Window window = backDialog.getWindow();
         WindowManager.LayoutParams lp = window.getAttributes();
         int screenWidth = getWindowManager().getDefaultDisplay().getWidth(); // 屏幕宽
-        lp.width =(int) screenWidth;
+        lp.width = (int) screenWidth;
         window.setAttributes(lp);
         TextView tv_cancel = backDialog.findViewById(R.id.tv_cancel);
         TextView tv_back = backDialog.findViewById(R.id.tv_back);
@@ -127,7 +129,7 @@ public class LeaveMsgActivity extends BaseActivity implements View.OnClickListen
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               ToastShort("调用接口");
+                ToastShort("调用接口");
             }
         });
     }
