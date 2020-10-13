@@ -60,7 +60,6 @@ public class EnvironmentActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                ToastShort("select" + position);
             }
 
             @Override

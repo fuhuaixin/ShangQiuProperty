@@ -31,7 +31,7 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
-
+    ndkVersion "21.3.6528147"
 }
 
 dependencies {
@@ -74,4 +74,8 @@ dependencies {
     implementation 'liji.library.dev:citypickerview:5.2.2'
 
     implementation files('libs/BaiduLBS_Android.jar')
+    //代替sp做本地存取
+    implementation 'com.tencent:mmkv:1.2.2'
+    //下拉刷新 https://github.com/scwang90/SmartRefreshLayout
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.2'
 }

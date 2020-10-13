@@ -1,5 +1,6 @@
 package com.fhx.property.fragment;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.fhx.property.R;
+import com.fhx.property.activity.login.LoginActivity;
 import com.fhx.property.activity.mine.ClockInActivity;
 import com.fhx.property.activity.mine.ExamineActivity;
 import com.fhx.property.activity.mine.LeaveActivity;
@@ -26,6 +28,7 @@ import com.fhx.property.base.BaseFragment;
 import com.fhx.property.bean.MineOABean;
 import com.fhx.property.utils.CommonDialog;
 import com.fhx.property.utils.CutToUtils;
+import com.tencent.mmkv.MMKV;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +46,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private TextView tv_logout;
     private View view_help;
     private RelativeLayout rl_change_msg;
+
 
     @Override
     public int setLayoutId() {
@@ -146,13 +150,17 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
      */
     private void initDialog() {
         final CommonDialog dialog = new CommonDialog(getActivity());
-        dialog.setMessage("确定退出？确定将直接退出程序")
+        dialog.setMessage("确定退出登录么？")
                 .setImageResId(-1)
                 .setTitle("系统提示")
                 .setSingle(false).setOnClickBottomListener(new CommonDialog.OnClickBottomListener() {
             @Override
             public void onPositiveClick() {
                 dialog.dismiss();
+                mmkv.removeValueForKey("token");
+                mmkv.removeValueForKey("userName");
+                mmkv.removeValueForKey("passWord");
+                CutToUtils.getInstance().JumpTo(getActivity(), LoginActivity.class);
                 getActivity().finish();
             }
 

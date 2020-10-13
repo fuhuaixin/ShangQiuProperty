@@ -32,8 +32,10 @@
 
             <TextView
                 android:id="@+id/tv_tem"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLength="5"
                 android:text="25"
                 android:textColor="@color/tv333"
                 android:textSize="80sp" />
@@ -69,6 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="25dp"
+                    android:maxLength="5"
                     android:text="25"
                     android:textColor="@color/tv333"
                     android:textSize="24dp"
@@ -100,7 +103,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="25dp"
+                    android:maxLength="5"
                     android:text="25"
+
                     android:textColor="@color/tv333"
                     android:textSize="24dp"
                     android:textStyle="bold" />
@@ -133,9 +138,11 @@
 
                 <TextView
                     android:id="@+id/tv_co"
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="25dp"
+                    android:maxLength="5"
                     android:text="25"
                     android:textColor="@color/tv333"
                     android:textSize="24dp"
@@ -165,8 +172,10 @@
                 <TextView
                     android:id="@+id/tv_co2"
                     android:layout_width="wrap_content"
+
                     android:layout_height="wrap_content"
                     android:layout_marginTop="25dp"
+                    android:maxLength="5"
                     android:text="25"
                     android:textColor="@color/tv333"
                     android:textSize="24dp"

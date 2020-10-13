@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.fhx.property.R;
 import com.fhx.property.activity.WaterPumpMsgActivity;
+import com.tencent.mmkv.MMKV;
 import com.zyao89.view.zloading.ZLoadingDialog;
 import com.zyao89.view.zloading.Z_TYPE;
 
@@ -22,12 +23,13 @@ public abstract class BaseActivity extends SwipeBackActivity {
 
     private SwipeBackLayout mSwipeBackLayout;
     public ZLoadingDialog zLoadingDialog;
+    public MMKV mmkv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(initLayout());
-
+        mmkv = MMKV.defaultMMKV();
         mSwipeBackLayout = getSwipeBackLayout();
         // 可以调用该方法，设置是否允许滑动退出
         setSwipeBackEnable(true);
@@ -103,7 +105,7 @@ public abstract class BaseActivity extends SwipeBackActivity {
      * 弹出窗
      */
 
-    public void ShowMenu(Context context,View view) {
+    public void ShowMenu(Context context, View view) {
         PopupMenu popupMenu = new PopupMenu(context, view);
         popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
