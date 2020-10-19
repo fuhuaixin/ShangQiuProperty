@@ -9,11 +9,17 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.fastjson.JSON;
 import com.fhx.property.R;
 import com.fhx.property.adapter.RepairsMsgImageAdapter;
+import com.fhx.property.base.AppUrl;
 import com.fhx.property.base.BaseActivity;
 import com.fhx.property.bean.RepairsCommitBean;
+import com.fhx.property.bean.SuccessBean;
 import com.fhx.property.utils.CutToUtils;
+import com.zhouyou.http.EasyHttp;
+import com.zhouyou.http.callback.SimpleCallBack;
+import com.zhouyou.http.exception.ApiException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +35,7 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
     private TextView tv_ing;
     private TextView tv_finish;
     private TextView tv_msg;
+    private TextView tv_evaluate;
     private ImageView image_ing;
     private ImageView image_finish;
     private View view_ing;
@@ -42,7 +49,7 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
 
     private RepairsMsgImageAdapter imageAdapter;
     private List<String> imageList = new ArrayList<>();
-    private RepairsCommitBean repairsCommitBean;
+    private RepairsCommitBean.DataBean.RecordsBean repairsCommitBean;
 
     @Override
     protected int initLayout() {
@@ -54,6 +61,7 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
         tvTitle = (TextView) findViewById(R.id.tv_title);
         tv_ing = (TextView) findViewById(R.id.tv_ing);
         tv_msg = (TextView) findViewById(R.id.tv_msg);
+        tv_evaluate = (TextView) findViewById(R.id.tv_evaluate);
         tv_finish = (TextView) findViewById(R.id.tv_finish);
         imageLeft = (ImageView) findViewById(R.id.image_left);
         image_ing = (ImageView) findViewById(R.id.image_ing);
@@ -71,16 +79,16 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
     protected void initData() {
         tvTitle.setText("报修详情");
 
-        repairsCommitBean = (RepairsCommitBean) getIntent().getSerializableExtra("bean");
-        Log.e("fhxx",repairsCommitBean.getMsg()+repairsCommitBean.getType());
+        repairsCommitBean = (RepairsCommitBean.DataBean.RecordsBean) getIntent().getSerializableExtra("bean");
+        Log.e("fhxx", repairsCommitBean.getContent() + repairsCommitBean.getStatus());
 
         Status(repairsCommitBean.getStatus());
-        tv_msg.setText(repairsCommitBean.getMsg());
+        tv_msg.setText(repairsCommitBean.getContent());
         imageList.add("https://iknow-pic.cdn.bcebos.com/fcfaaf51f3deb48f12d46640f21f3a292cf578eb?x-bce-process=image/resize,m_lfit,w_600,h_800,limit_1");
         imageList.add("https://iknow-pic.cdn.bcebos.com/7af40ad162d9f2d3659ee371abec8a136227cca5?x-bce-process=image/resize,m_lfit,w_600,h_800,limit_1");
         imageList.add("https://iknow-pic.cdn.bcebos.com/7af40ad162d9f2d3659ee371abec8a136227cca5?x-bce-process=image/resize,m_lfit,w_600,h_800,limit_1");
-        imageAdapter =new RepairsMsgImageAdapter(imageList);
-        recycle_image.setLayoutManager(new GridLayoutManager(this,3));
+        imageAdapter = new RepairsMsgImageAdapter(imageList);
+        recycle_image.setLayoutManager(new GridLayoutManager(this, 3));
         recycle_image.setAdapter(imageAdapter);
 
     }
@@ -90,29 +98,43 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
 
         imageLeft.setOnClickListener(this);
         ll_no_evaluate.setOnClickListener(this);
+        tv_evaluate.setOnClickListener(this);
+        ll_revocation.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.image_left:
                 finish();
-                overridePendingTransition(R.anim.activity_out_from_animation,R.anim.activity_out_to_animation);
+                overridePendingTransition(R.anim.activity_out_from_animation, R.anim.activity_out_to_animation);
                 break;
             case R.id.ll_no_evaluate:
-                CutToUtils.getInstance().JumpToBean(RepairsMsgActivity.this,RepairsMsgEvaActivity.class,repairsCommitBean);
+                break;
+            case R.id.tv_evaluate:
+                if (repairsCommitBean.getCustomerId() != null && repairsCommitBean.getCustomerId().equals(mmkv.decodeString("userId"))) {
+                    CutToUtils.getInstance().JumpToBean(RepairsMsgActivity.this, RepairsMsgEvaActivity.class, repairsCommitBean);
+                } else {
+                    ToastShort("只可评价自己发起的报修");
+                }
+                break;
+            case R.id.ll_revocation: //撤回
+                cancle(repairsCommitBean.getRepairId());
                 break;
         }
     }
 
     /**
      * 状态的判断
+     *
      * @param i
      */
-    private void Status(int i){
-        switch (i){
-            case 1:
-                ll_revocation.setVisibility(View.VISIBLE);
+    private void Status(String i) {
+        switch (i) {
+            case "0":
+                if (repairsCommitBean.getCustomerId().equals(mmkv.decodeString("userId"))) {
+                    ll_revocation.setVisibility(View.VISIBLE);
+                }
                 tv_ing.setTextColor(getResources().getColor(R.color.tvaaa));
                 tv_finish.setTextColor(getResources().getColor(R.color.tvaaa));
                 image_ing.setImageResource(R.mipmap.icon_repairs_msg_ing);
@@ -121,7 +143,7 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
                 view_finish.setBackgroundResource(R.color.tvaaa);
                 ll_evaluate.setVisibility(View.GONE);
                 break;
-            case 2:
+            case "1":
                 tv_ing.setTextColor(getResources().getColor(R.color.col_repairs_blue));
                 tv_finish.setTextColor(getResources().getColor(R.color.tvaaa));
                 image_ing.setImageResource(R.mipmap.icon_repairs_msg_ing_sel);
@@ -131,9 +153,19 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
                 ll_evaluate.setVisibility(View.GONE);
                 ll_repairs_man.setVisibility(View.VISIBLE);
                 break;
-            case 3:
+            case "3":
+                tv_ing.setTextColor(getResources().getColor(R.color.col_repairs_blue));
+                tv_finish.setTextColor(getResources().getColor(R.color.col_repairs_blue));
+                tv_finish.setText("已撤回");
+                image_ing.setImageResource(R.mipmap.icon_repairs_msg_ing_sel);
+                image_finish.setImageResource(R.mipmap.icon_repairs_finish_sel);
+                view_ing.setBackgroundResource(R.color.col_repairs_blue);
+                view_finish.setBackgroundResource(R.color.col_repairs_blue);
+                break;
+            case "4":
                 ll_no_evaluate.setVisibility(View.VISIBLE);
                 ll_repairs_man.setVisibility(View.VISIBLE);
+
                 tv_ing.setTextColor(getResources().getColor(R.color.col_repairs_blue));
                 tv_finish.setTextColor(getResources().getColor(R.color.col_repairs_blue));
                 image_ing.setImageResource(R.mipmap.icon_repairs_msg_ing_sel);
@@ -141,7 +173,7 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
                 view_ing.setBackgroundResource(R.color.col_repairs_blue);
                 view_finish.setBackgroundResource(R.color.col_repairs_blue);
                 break;
-            case 4:
+            case "5":
                 ll_evaluate.setVisibility(View.VISIBLE);
                 ll_repairs_man.setVisibility(View.VISIBLE);
                 tv_ing.setTextColor(getResources().getColor(R.color.col_repairs_blue));
@@ -154,4 +186,30 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
         }
     }
 
+    /**
+     * 撤回报修
+     */
+    private void cancle(String id){
+        EasyHttp.put(AppUrl.RepairCancel)
+                .syncRequest(false)
+                .params("repairId",id)
+                .execute(new SimpleCallBack<String>() {
+                    @Override
+                    public void onError(ApiException e) {
+                        Log.e("error",e.getMessage());
+                    }
+
+                    @Override
+                    public void onSuccess(String s) {
+                        SuccessBean successBean = JSON.parseObject(s, SuccessBean.class);
+                        if (successBean.isSuccess()){
+                            ToastShort("撤回成功");
+                            finish();
+                            overridePendingTransition(R.anim.activity_out_from_animation, R.anim.activity_out_to_animation);
+                        }else {
+                            ToastShort(successBean.getMsg());
+                        }
+                    }
+                });
+    }
 }

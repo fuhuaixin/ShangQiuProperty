@@ -18,7 +18,6 @@ import com.fhx.property.base.AppUrl;
 import com.fhx.property.base.BaseActivity;
 import com.fhx.property.bean.RepairsCommitBean;
 import com.fhx.property.utils.CutToUtils;
-import com.lljjcoder.style.citylist.Toast.ToastUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -31,14 +30,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 报修
+ * 我的报修
  */
-public class RepairsActivity extends BaseActivity implements View.OnClickListener {
-
+public class MyRepairsActivity extends BaseActivity implements View.OnClickListener {
     private TextView tvTitle;
-    private TextView tv_right;
     private ImageView imageBack;
-    private TextView tv_to_repairs;
     private SmartRefreshLayout refresh_repairs;
     private RecyclerView recycle_repairs;
     private List<RepairsCommitBean.DataBean.RecordsBean> repairsBeanList = new ArrayList<>();
@@ -51,29 +47,23 @@ public class RepairsActivity extends BaseActivity implements View.OnClickListene
     private TextView tv_btn;
     private int page = 1; //第几页
 
-
     @Override
     protected int initLayout() {
-        return R.layout.activity_repairs;
+        return R.layout.activity_my_repairs;
     }
 
     @Override
     protected void initView() {
         tvTitle = (TextView) findViewById(R.id.tv_title);
-        tv_right = (TextView) findViewById(R.id.tv_right);
-        tv_to_repairs = (TextView) findViewById(R.id.tv_to_repairs);
         imageBack = (ImageView) findViewById(R.id.image_left);
         recycle_repairs = (RecyclerView) findViewById(R.id.recycle_repairs);
         refresh_repairs = (SmartRefreshLayout) findViewById(R.id.refresh_repairs);
-
         ll_empty = (LinearLayout) findViewById(R.id.ll_empty);
         image_top = (ImageView) findViewById(R.id.image_top);
         tv_msg = (TextView) findViewById(R.id.tv_msg);
         tv_btn = (TextView) findViewById(R.id.tv_btn);
 
-
     }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -81,29 +71,21 @@ public class RepairsActivity extends BaseActivity implements View.OnClickListene
         page = 1;
         getList(page);
     }
-
     @Override
     protected void initData() {
-        tvTitle.setText("报修");
-        tv_right.setVisibility(View.VISIBLE);
-        tv_right.setText("我的报修");
+        tvTitle.setText("我的报修");
         repairsCommitAdapter = new RepairsCommitAdapter(repairsBeanList);
         recycle_repairs.setLayoutManager(new LinearLayoutManager(this));
         recycle_repairs.setAdapter(repairsCommitAdapter);
-
     }
 
     @Override
     protected void initListen() {
         imageBack.setOnClickListener(this);
-        tv_to_repairs.setOnClickListener(this);
-        tv_btn.setOnClickListener(this);
-        tv_right.setOnClickListener(this);
-
         repairsCommitAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                CutToUtils.getInstance().JumpToBean(RepairsActivity.this,RepairsMsgActivity.class,repairsBeanList.get(position));
+                CutToUtils.getInstance().JumpToBean(MyRepairsActivity.this,RepairsMsgActivity.class,repairsBeanList.get(position));
             }
         });
 
@@ -127,26 +109,22 @@ public class RepairsActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
+        switch (v.getId()){
             case R.id.image_left:
                 finish();
                 overridePendingTransition(R.anim.activity_out_from_animation, R.anim.activity_out_to_animation);
-                break;
-            case R.id.tv_to_repairs:
-            case R.id.tv_btn:
-                CutToUtils.getInstance().JumpTo(RepairsActivity.this, RepairsCommitActivity.class);
-                break;
-            case R.id.tv_right:
-                CutToUtils.getInstance().JumpTo(RepairsActivity.this, MyRepairsActivity.class);
                 break;
         }
     }
 
     private void getList(int page) {
+        String userId = mmkv.decodeString("userId");
+        Log.e("fhxx","userId==="+userId);
         EasyHttp.get(AppUrl.RepairList)
                 .syncRequest(false)
                 .params("pageNum", String.valueOf(page))
                 .params("pageSize", "10")
+                .params("customerId",userId)
                 .execute(new SimpleCallBack<String>() {
                     @Override
                     public void onError(ApiException e) {
@@ -178,6 +156,5 @@ public class RepairsActivity extends BaseActivity implements View.OnClickListene
                 });
 
     }
-
 
 }

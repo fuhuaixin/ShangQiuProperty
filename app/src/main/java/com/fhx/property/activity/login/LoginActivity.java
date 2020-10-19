@@ -172,6 +172,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             CutToUtils.getInstance().JumpTo(LoginActivity.this, MainActivity.class);
                             //存
                             mmkv.encode("token",loginBean.getData().getToken());
+                            mmkv.encode("userId",loginBean.getData().getUser().getUserId());
                             Log.e("fhxx","取token"+mmkv.decodeString("token"));
                         }else {
                             ToastUtils.showShortToast(LoginActivity.this,loginBean.getMsg());

@@ -1,8 +1,11 @@
 package com.fhx.property.activity;
 
+import android.content.Context;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
-import android.webkit.WebView;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,6 +30,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zhouyou.http.EasyHttp;
 import com.zhouyou.http.callback.SimpleCallBack;
 import com.zhouyou.http.exception.ApiException;
+import com.zhouyou.http.request.GetRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +102,7 @@ public class NotifyListActivity extends BaseActivity {
         adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                CutToUtils.getInstance().JumpToTwo(NotifyListActivity.this, WebActivity.class, "公告详情", "https://www.baidu.com/");
+                CutToUtils.getInstance().JumpToOne(NotifyListActivity.this, NotifyMsgActivity.class, mList.get(position).getNewsId());
             }
         });
 
@@ -118,6 +122,27 @@ public class NotifyListActivity extends BaseActivity {
                 getNews(page);
             }
         });
+        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == KeyEvent.KEYCODE_ENTER) {
+                    //先隐藏键盘
+                    ((InputMethodManager) etSearch.getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
+                            .hideSoftInputFromWindow(
+                                    NotifyListActivity.this
+                                            .getCurrentFocus()
+                                            .getWindowToken(),
+                                    InputMethodManager.HIDE_NOT_ALWAYS);
+                    //实现搜索逻辑
+//                    gotoSearch();
+                    mList.clear();
+                    page=1;
+                    getNews(page);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     /**
@@ -125,11 +150,14 @@ public class NotifyListActivity extends BaseActivity {
      */
     private void getNews(int page) {
 
-        EasyHttp.get(AppUrl.NewsList)
-                .syncRequest(false)
-                .params("pageNum", String.valueOf(page))
-                .params("pageSize", "2")
-                .execute(new SimpleCallBack<String>() {
+        GetRequest getRequest = EasyHttp.get(AppUrl.NewsList);
+        getRequest.syncRequest(false);
+        getRequest.params("pageNum", String.valueOf(page));
+        getRequest.params("pageSize", "5");
+        if (etSearch.getText().toString()!=null&&!etSearch.getText().toString().equals("")){
+            getRequest.params("title", etSearch.getText().toString());
+        }
+        getRequest.execute(new SimpleCallBack<String>() {
                     @Override
                     public void onError(ApiException e) {
                         Log.e("error", e.getMessage());
@@ -155,5 +183,7 @@ public class NotifyListActivity extends BaseActivity {
                     }
                 });
     }
+
+
 
 }

@@ -3,11 +3,13 @@ package com.fhx.property.fragment;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.fhx.property.R;
@@ -29,14 +32,19 @@ import com.fhx.property.activity.ReminderActivity;
 import com.fhx.property.activity.RepairsActivity;
 import com.fhx.property.adapter.HomeNavAdapter;
 import com.fhx.property.adapter.HomeTaskAdapter;
+import com.fhx.property.base.AppUrl;
 import com.fhx.property.base.BaseFragment;
 import com.fhx.property.bean.HomeNavBean;
 import com.fhx.property.bean.HomeTaskBean;
+import com.fhx.property.bean.NotifyListBean;
 import com.fhx.property.utils.ListDialog;
 import com.fhx.property.utils.CutToUtils;
 import com.to.aboomy.banner.Banner;
 import com.to.aboomy.banner.HolderCreator;
 import com.to.aboomy.banner.ScaleInTransformer;
+import com.zhouyou.http.EasyHttp;
+import com.zhouyou.http.callback.SimpleCallBack;
+import com.zhouyou.http.exception.ApiException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +60,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
     private RecyclerView recycle_task;
     private RelativeLayout rl_notify_list;
     private ImageView image_weather;
+    private TextView tv_inform_one,tv_inform_two;
     //banner list
 //    private List<String> bannerList =new ArrayList<>();
     private List<Integer> bannerList =new ArrayList<>();
@@ -75,12 +84,14 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
         rl_notify_list =view.findViewById(R.id.rl_notify_list);
         ll_fault_notifi =view.findViewById(R.id.ll_fault_notifi);
         image_weather =view.findViewById(R.id.image_weather);
+        tv_inform_one =view.findViewById(R.id.tv_inform_one);
+        tv_inform_two =view.findViewById(R.id.tv_inform_two);
     }
 
     @Override
     public void setViewData(View view) {
         super.setViewData(view);
-
+        getNotify();
         homeNavBeanList.clear();
         homeNavBeanList.add(new HomeNavBean(R.mipmap.icon_repairs,"报修"));
         homeNavBeanList.add(new HomeNavBean(R.mipmap.icon_device,"设备管理"));
@@ -213,5 +224,30 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
                 CutToUtils.getInstance().JumpTo(getActivity(), EnvironmentActivity.class);
                 break;
         }
+    }
+
+    /**
+     *获取通知
+     */
+    private void getNotify(){
+        EasyHttp.get(AppUrl.NewsList)
+                .syncRequest(false)
+                .params("pageNum","1")
+                .params("pageSize","5")
+                .execute(new SimpleCallBack<String>() {
+                    @Override
+                    public void onError(ApiException e) {
+                        Log.e("error",e.getMessage());
+                    }
+
+                    @Override
+                    public void onSuccess(String s) {
+                        NotifyListBean notifyListBean = JSON.parseObject(s, NotifyListBean.class);
+                        if (notifyListBean.isSuccess()){
+                            tv_inform_one.setText(notifyListBean.getData().getRecords().get(0).getTitle());
+                            tv_inform_two.setText(notifyListBean.getData().getRecords().get(1).getTitle());
+                        }
+                    }
+                });
     }
 }

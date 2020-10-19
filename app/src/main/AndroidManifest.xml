@@ -42,9 +42,10 @@
         </provider>
 
 
-        <service android:name="com.baidu.location.f"
+        <service
+            android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote"/>
+            android:process=":remote" />
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="rbUaQmRzQH1XQjDVYWZtHh9Re3mRUZMN" />
@@ -76,6 +77,10 @@
         <!--报修-->
         <activity
             android:name=".activity.RepairsActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--我的报修-->
+        <activity
+            android:name=".activity.MyRepairsActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--报修详情-->
         <activity
@@ -189,6 +194,10 @@
         <activity
             android:name=".activity.NotifyListActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--通知列表详情-->
+        <activity
+            android:name=".activity.NotifyMsgActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--环境监测-->
         <activity
             android:name=".activity.EnvironmentActivity"
@@ -198,8 +207,6 @@
         <activity
             android:name=".activity.WebActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-
-
         <!--修改密码-->
         <activity
             android:name=".activity.mine.ChangePasswordActivity"

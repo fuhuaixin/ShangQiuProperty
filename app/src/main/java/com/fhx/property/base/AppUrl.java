@@ -12,5 +12,17 @@ public class AppUrl {
 
     //通知公告列表查询接口
     public static final String NewsList = BASEURL + "news/list";
+    //通知公告列表详情接口
+    public static final String NewsMsg = BASEURL + "news/detail";
+    //报修类型列表查询接口
+    public static final String RepairTypeList = BASEURL + "repairType/list";
+    //添加报修信息
+    public static final String RepairAdd = BASEURL + "repair/add";
+    //报修列表查询接口
+    public static final String RepairList = BASEURL + "repair/list";
+    //删除报修信息
+    public static final String RepairDel = BASEURL + "repair/del";
+    //撤回报修信息
+    public static final String RepairCancel = BASEURL + "repair/cancel";
 
 }
