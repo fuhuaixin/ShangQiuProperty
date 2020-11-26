@@ -1,67 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <include
         android:id="@+id/include_title"
-        layout="@layout/include_activity_title"/>
+        layout="@layout/include_activity_title" />
 
     <LinearLayout
-        android:gravity="center_horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
         <RatingBar
-            android:layout_centerHorizontal="true"
             android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/include_title"
-            android:numStars="5"
-            android:progressTint="#ff8003"
-            android:stepSize="1"
-            android:isIndicator="false"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="35dp"
             android:layout_marginBottom="50dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:isIndicator="false"
+            android:numStars="5"
+            android:progressTint="#ff8003"
+            android:stepSize="1" />
     </LinearLayout>
 
 
     <View
-        android:layout_below="@+id/ratingBar"
         android:layout_width="match_parent"
         android:layout_height="10dp"
-        android:background="@color/all_line"/>
+        android:layout_below="@+id/ratingBar"
+        android:background="@color/all_line" />
 
     <TextView
-        android:layout_margin="15dp"
-        android:textSize="12sp"
-        android:textColor="@color/tv888"
-        android:layout_below="@+id/tv_line1"
-        android:text="评价"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_line1"
+        android:layout_margin="15dp"
+        android:text="评价"
+        android:textColor="@color/tv888"
+        android:textSize="12sp" />
 
     <EditText
-        android:layout_marginBottom="15dp"
-        android:textColor="@color/tv333"
-        android:textColorHint="@color/tvaaa"
-        android:textSize="16sp"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:gravity="top"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:background="@null"
-        android:hint="请输入评价"
-        android:layout_below="@+id/tv_title"
         android:id="@+id/edit_eva"
         android:layout_width="match_parent"
-        android:layout_height="150dp"/>
+        android:layout_height="150dp"
+        android:layout_below="@+id/tv_title"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="@null"
+        android:gravity="top"
+        android:hint="请输入评价"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:textColor="@color/tv333"
+        android:textColorHint="@color/tvaaa"
+        android:textSize="16sp" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/all_line"/>
+        android:background="@color/all_line" />
 </LinearLayout>

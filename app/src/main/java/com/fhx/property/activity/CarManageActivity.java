@@ -1,20 +1,33 @@
 package com.fhx.property.activity;
 
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.fastjson.JSON;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.fhx.property.R;
 import com.fhx.property.adapter.CarManageAdapter;
+import com.fhx.property.base.AppUrl;
 import com.fhx.property.base.BaseActivity;
 import com.fhx.property.bean.CarManageBean;
 import com.fhx.property.utils.CutToUtils;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zhouyou.http.EasyHttp;
+import com.zhouyou.http.callback.SimpleCallBack;
+import com.zhouyou.http.exception.ApiException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +41,7 @@ public class CarManageActivity extends BaseActivity implements View.OnClickListe
     private TextView tvTitle;
     private ImageView imageLeft;
     private RecyclerView recyclerCar;
+    private SmartRefreshLayout refreshLayout;
 
     /*空界面*/
     private LinearLayout ll_empty;
@@ -36,8 +50,8 @@ public class CarManageActivity extends BaseActivity implements View.OnClickListe
     private TextView tv_btn;
 
     private CarManageAdapter adapter;
-    private List<CarManageBean> mList = new ArrayList<>();
-
+    private List<CarManageBean.DataBean.RecordsBean> mList = new ArrayList<>();
+    private int page;
     @Override
     protected int initLayout() {
         return R.layout.activity_reminder;
@@ -49,6 +63,7 @@ public class CarManageActivity extends BaseActivity implements View.OnClickListe
         tvTitle = (TextView) findViewById(R.id.tv_title);
         imageLeft = (ImageView) findViewById(R.id.image_left);
         recyclerCar = (RecyclerView) findViewById(R.id.recycle_reminder);
+        refreshLayout = (SmartRefreshLayout) findViewById(R.id.refreshLayout);
 
         ll_empty = (LinearLayout) findViewById(R.id.ll_empty);
         image_top = (ImageView) findViewById(R.id.image_top);
@@ -58,27 +73,14 @@ public class CarManageActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     protected void initData() {
-        et_search.setHint("搜索车牌号、车主及房号");
+        et_search.setHint("搜索车牌号、车主");
         tvTitle.setText("车辆管理");
-
-        for (int i = 0; i < 6; i++) {
-            mList.add(new CarManageBean("豫A8888" + i, "车主名字" + i, "房间号" + i));
-        }
-
-        if (mList.size()>0){
-            ll_empty.setVisibility(View.GONE);
-        }else {
-            ll_empty.setVisibility(View.VISIBLE);
-            image_top.setImageResource(R.mipmap.icon_empty_car);
-            tv_msg.setText("暂无登记车辆");
-//            tv_btn.setVisibility(View.VISIBLE);
-//            tv_btn.setText("我要报修");
-        }
 
         adapter = new CarManageAdapter(mList);
         recyclerCar.setLayoutManager(new LinearLayoutManager(this));
         recyclerCar.setAdapter(adapter);
-
+        page=1;
+        getList("");
     }
 
     @Override
@@ -88,7 +90,44 @@ public class CarManageActivity extends BaseActivity implements View.OnClickListe
         adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                CutToUtils.getInstance().JumpToBean(CarManageActivity.this, CarMsgActivity.class, mList.get(position));
+                CutToUtils.getInstance().JumpToOne(CarManageActivity.this, CarMsgActivity.class, mList.get(position).getCarId());
+            }
+        });
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                mList.clear();
+                page=1;
+                if (TextUtils.isEmpty(et_search.getText().toString())){
+                    getList("");
+                }else {
+                    getList(et_search.getText().toString());
+
+                }
+            }
+        });
+
+        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                page++;
+                if (TextUtils.isEmpty(et_search.getText().toString())){
+                    getList("");
+                }else {
+                    getList(et_search.getText().toString());
+                }
+            }
+        });
+        et_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((actionId == 0 || actionId == 3) && event != null) {
+                    //点击搜索要做的操作
+                    mList.clear();
+                    page=1;
+                    getList(et_search.getText().toString());
+                }
+                return false;
             }
         });
     }
@@ -102,5 +141,43 @@ public class CarManageActivity extends BaseActivity implements View.OnClickListe
                 break;
 
         }
+    }
+
+    /**
+     * 获取车俩列表
+     */
+    private void getList(String search){
+        EasyHttp.get(AppUrl.CarList)
+                .syncRequest(false)
+                .params("pageNum", String.valueOf(page))
+                .params("pageSize","10")
+                .params("param",search)
+                .execute(new SimpleCallBack<String>() {
+                    @Override
+                    public void onError(ApiException e) {
+                        Log.e("error",e.getMessage());
+                    }
+
+                    @Override
+                    public void onSuccess(String s) {
+                        refreshLayout.finishLoadMore();
+                        refreshLayout.finishRefresh();
+                        CarManageBean carManageBean = JSON.parseObject(s, CarManageBean.class);
+                        if (carManageBean.isSuccess()){
+                            mList.addAll(carManageBean.getData().getRecords());
+                            if (mList.size()>0){
+                                ll_empty.setVisibility(View.GONE);
+                            }else {
+                                ll_empty.setVisibility(View.VISIBLE);
+                                image_top.setImageResource(R.mipmap.icon_empty_car);
+                                tv_msg.setText("暂无登记车辆");
+                            }
+
+                            adapter.notifyDataSetChanged();
+                        }else {
+                            ToastShort(carManageBean.getMsg());
+                        }
+                    }
+                });
     }
 }

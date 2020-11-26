@@ -1,7 +1,12 @@
 package com.fhx.property.activity;
 
+import android.content.Context;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,6 +31,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zhouyou.http.EasyHttp;
 import com.zhouyou.http.callback.SimpleCallBack;
 import com.zhouyou.http.exception.ApiException;
+import com.zhouyou.http.request.GetRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +46,7 @@ public class RepairsActivity extends BaseActivity implements View.OnClickListene
     private ImageView imageBack;
     private TextView tv_to_repairs;
     private SmartRefreshLayout refresh_repairs;
+    private EditText et_search;
     private RecyclerView recycle_repairs;
     private List<RepairsCommitBean.DataBean.RecordsBean> repairsBeanList = new ArrayList<>();
     private RepairsCommitAdapter repairsCommitAdapter;
@@ -70,6 +77,7 @@ public class RepairsActivity extends BaseActivity implements View.OnClickListene
         image_top = (ImageView) findViewById(R.id.image_top);
         tv_msg = (TextView) findViewById(R.id.tv_msg);
         tv_btn = (TextView) findViewById(R.id.tv_btn);
+        et_search = (EditText) findViewById(R.id.et_search);
 
 
     }
@@ -123,6 +131,28 @@ public class RepairsActivity extends BaseActivity implements View.OnClickListene
                 getList(page);
             }
         });
+
+        et_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == KeyEvent.KEYCODE_ENTER) {
+                    //先隐藏键盘
+                    ((InputMethodManager) et_search.getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
+                            .hideSoftInputFromWindow(
+                                    RepairsActivity.this
+                                            .getCurrentFocus()
+                                            .getWindowToken(),
+                                    InputMethodManager.HIDE_NOT_ALWAYS);
+                    //实现搜索逻辑
+//                    gotoSearch();
+                    repairsBeanList.clear();
+                    page=1;
+                    getList(page);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -143,11 +173,14 @@ public class RepairsActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void getList(int page) {
-        EasyHttp.get(AppUrl.RepairList)
-                .syncRequest(false)
-                .params("pageNum", String.valueOf(page))
-                .params("pageSize", "10")
-                .execute(new SimpleCallBack<String>() {
+        GetRequest getRequest = EasyHttp.get(AppUrl.RepairList);
+        getRequest.syncRequest(false);
+        getRequest .params("pageNum", String.valueOf(page));
+        getRequest.params("pageSize", "10");
+        if (et_search.getText().toString()!=null&&!et_search.getText().toString().equals("")){
+            getRequest.params("content", et_search.getText().toString());
+        }
+        getRequest .execute(new SimpleCallBack<String>() {
                     @Override
                     public void onError(ApiException e) {
                         Log.e("error", e.getMessage());
@@ -169,7 +202,6 @@ public class RepairsActivity extends BaseActivity implements View.OnClickListene
                                 tv_btn.setVisibility(View.VISIBLE);
                                 tv_btn.setText("我要报修");
                             }
-
                             repairsCommitAdapter.notifyDataSetChanged();
                         } else {
                             ToastShort(repairsCommitBean.getMsg());

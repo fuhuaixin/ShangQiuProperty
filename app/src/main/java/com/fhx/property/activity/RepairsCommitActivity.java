@@ -322,13 +322,14 @@ public class RepairsCommitActivity extends BaseActivity implements View.OnClickL
             EasyHttp.post(AppUrl.RepairAdd)
                     .syncRequest(false)
 //                    .upJson(jsonObject.toString())
-                    .params("content",et_content.getText().toString())
-                    .params("reserveTime",tv_choose_time.getText().toString())
-                    .params("customerName",et_name.getText().toString())
-                    .params("customerPhone",et_number.getText().toString())
-                    .params("repairTypeName",tv_type.getText().toString())
-                    .params("notes",et_floor.getText().toString())
-                    .params("customerId",mmkv.decodeString("userId"))
+                    .params("content", et_content.getText().toString())
+                    .params("reserveTime", tv_choose_time.getText().toString())
+                    .params("customerName", et_name.getText().toString())
+                    .params("customerPhone", et_number.getText().toString())
+                    .params("repairTypeName", tv_type.getText().toString())
+                    .params("notes", et_floor.getText().toString())
+                    .params("customerId", mmkv.decodeString("userId"))
+                    .params("originType", "0")
                     .execute(new SimpleCallBack<String>() {
                         @Override
                         public void onError(ApiException e) {

@@ -12,6 +12,12 @@ import androidx.core.widget.NestedScrollView;
 
 import com.fhx.property.R;
 import com.fhx.property.base.BaseActivity;
+import com.fhx.property.bean.TenantByPageBean;
+
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 租赁详情
@@ -20,9 +26,13 @@ public class LeaseMsgActivity extends BaseActivity implements View.OnClickListen
 
     private ImageView imageLeft,imageRight;
     private TextView tv_title;
+    private TextView tv_company_name,tv_company_msg,tv_lease_room,tv_start_time,tv_room_area,tv_end_time;
+    private TextView tv_tenantry_name,tv_tenantry_phone;
     private View view_title;
     private NestedScrollView nested;
-
+    private String spaceId;
+    private TenantByPageBean byPageBean;
+    private int chooseOne,chooseTwo,chooseThree;
     @Override
     protected int initLayout() {
         return R.layout.activity_lease_msg;
@@ -33,13 +43,49 @@ public class LeaseMsgActivity extends BaseActivity implements View.OnClickListen
         imageLeft = (ImageView) findViewById(R.id.image_left);
         imageRight = (ImageView) findViewById(R.id.image_right);
         tv_title = (TextView) findViewById(R.id.tv_title);
+        tv_company_name = (TextView) findViewById(R.id.tv_company_name);
+        tv_company_msg = (TextView) findViewById(R.id.tv_company_msg);
+        tv_lease_room = (TextView) findViewById(R.id.tv_lease_room);
+        tv_room_area = (TextView) findViewById(R.id.tv_room_area);
+        tv_start_time = (TextView) findViewById(R.id.tv_start_time);
+        tv_end_time = (TextView) findViewById(R.id.tv_end_time);
+        tv_tenantry_name = (TextView) findViewById(R.id.tv_tenantry_name);
+        tv_tenantry_phone = (TextView) findViewById(R.id.tv_tenantry_phone);
         view_title =findViewById(R.id.view_title);
         nested = (NestedScrollView) findViewById(R.id.nested);
     }
 
     @Override
     protected void initData() {
+        spaceId =getIntent().getStringExtra("spaceId");
+        byPageBean = (TenantByPageBean) getIntent().getSerializableExtra("bean");
         tv_title.setText("租赁详情");
+
+        List<TenantByPageBean.DataBean.RecordsBean> records = byPageBean.getData().getRecords();
+        for (int i = 0; i < records.size(); i++) {
+            for (int j = 0; j < records.get(i).getRooms().size(); j++) {
+                if (records.get(i).getRooms().get(j).getSpaceId().equals(spaceId)){
+                    chooseOne=i;
+                    chooseTwo=j;
+                    Log.e("fhxx","choose"+chooseOne+"------"+chooseTwo);
+                }
+            }
+            for (int j = 0; j <records.get(i).getContracts().size() ; j++) {
+                if (records.get(i).getContracts().get(j).getSpaceId().equals(spaceId)){
+                    chooseThree=j;
+                }
+            }
+        }
+
+        tv_company_name.setText(records.get(chooseOne).getCompany());
+        tv_company_msg.setText(records.get(chooseOne).getNotes());
+        tv_room_area.setText(records.get(chooseOne).getRooms().get(chooseTwo).getFloorArea()+"m²");
+        tv_lease_room.setText(records.get(chooseOne).getRooms().get(chooseTwo).getRoomName());
+        tv_start_time.setText(records.get(chooseOne).getContracts().get(chooseThree).getBeginDate());
+        tv_end_time.setText(records.get(chooseOne).getContracts().get(chooseThree).getEndDate());
+        tv_tenantry_name.setText(records.get(chooseOne).getTenantryName());
+        tv_tenantry_phone.setText(records.get(chooseOne).getPhone());
+
     }
 
     @Override

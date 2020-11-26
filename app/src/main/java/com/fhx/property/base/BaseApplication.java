@@ -7,6 +7,7 @@ import android.util.Log;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 import com.fhx.property.R;
+import com.lljjcoder.style.citylist.Toast.ToastUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
@@ -18,10 +19,22 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.tencent.mmkv.MMKV;
 import com.zhouyou.http.EasyHttp;
 import com.zhouyou.http.cache.converter.GsonDiskConverter;
+import com.zhouyou.http.cookie.CookieManger;
+import com.zhouyou.http.cookie.PersistentCookieStore;
+import com.zhouyou.http.model.HttpHeaders;
+import com.zhouyou.http.model.HttpParams;
+
+import java.util.List;
+import java.util.StringTokenizer;
+
+import okhttp3.Cookie;
 
 import static com.scwang.smartrefresh.layout.SmartRefreshLayout.*;
 
 public class BaseApplication extends Application {
+
+    private String str;
+
     static {
         //设置全局的Header构建器
         setDefaultRefreshHeaderCreator(new DefaultRefreshHeaderCreator() {
@@ -44,41 +57,68 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        //网络请求
+        EasyHttp.init(this);//默认初始化,必须调用
+        EasyHttp instance = EasyHttp.getInstance();
+
+       /* CookieManger cookieJar = EasyHttp.getCookieJar();
+        if (cookieJar!=null){
+            PersistentCookieStore cookieStore = cookieJar.getCookieStore();
+
+            List<Cookie> cookies = cookieStore.getCookies();
+            Log.e("fhxx",cookies.size()+"\n"+cookies.get(0));
+            str= new StringTokenizer(cookies.get(0).toString(), ";").nextToken();
+
+            Log.e("fhxx  1",str);
+            Log.e("fhxx   2",str.substring(str.indexOf("=")+1));
+
+
+            instance.addCommonHeaders(headers);
+
+        }*/
+        //MMKV 本地存取数据 代替sp
+        String initMMKV = MMKV.initialize(this);
+        MMKV mmkv = MMKV.defaultMMKV();
+        Log.e("MMKV 初始化", initMMKV);
+        //全局设置请求头
+        HttpHeaders headers = new HttpHeaders();
+        ToastUtils.showShortToast(this,mmkv.decodeString("token"));
+        headers.put("Admin-Token",mmkv.decodeString("token"));
+
+
         //在使用SDK各组件之前初始化context信息，传入ApplicationContext
         SDKInitializer.initialize(this);
         //自4.3.0起，百度地图SDK所有接口均支持百度坐标和国测局坐标，用此方法设置您使用的坐标类型.
         //包括BD09LL和GCJ02两种坐标，默认是BD09LL坐标。
         SDKInitializer.setCoordType(CoordType.BD09LL);
 
-        //网络请求
-        EasyHttp.init(this);//默认初始化,必须调用
 
-        EasyHttp.getInstance()
-
+        instance
                 //可以全局统一设置全局URL
                 .setBaseUrl(AppUrl.BASEURL)//设置全局URL  url只能是域名 或者域名+端口号
 
                 // 打开该调试开关并设置TAG,不需要就不要加入该行
                 // 最后的true表示是否打印内部异常，一般打开方便调试错误
                 .debug("EasyHttp", true)
-
                 //如果使用默认的60秒,以下三行也不需要设置
                 .setReadTimeOut(60 * 1000)
                 .setWriteTimeOut(60 * 100)
                 .setConnectTimeout(60 * 100)
                 .setCacheDiskConverter(new GsonDiskConverter())
-                //可以全局统一设置超时重连次数,默认为3次,那么最差的情况会请求4次(一次原始请求,三次重连请求),
+
+                .setCookieStore(new CookieManger(this))
+                .addCommonHeaders(headers)
                 //不需要可以设置为0
+                //可以全局统一设置超时重连次数,默认为3次,那么最差的情况会请求4次(一次原始请求,三次重连请求),
                 .setRetryCount(3)//网络不好自动重试3次
                 //可以全局统一设置超时重试间隔时间,默认为500ms,不需要可以设置为0
                 .setRetryDelay(500)//每次延时500ms重试
                 //可以全局统一设置超时重试间隔叠加时间,默认为0ms不叠加
                 .setRetryIncreaseDelay(500)//每次延时叠加500ms
-                .setCertificates();                                 //方法一：信任所有证书,不安全有风险
+                .setCertificates();//方法一：信任所有证书,不安全有风险
 
 
-        //MMKV 本地存取数据 代替sp
-        String initMMKV = MMKV.initialize(this);
-        Log.e("MMKV 初始化", initMMKV);
+
     }
 }

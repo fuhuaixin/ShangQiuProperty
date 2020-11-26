@@ -9,9 +9,15 @@ import android.widget.TextView;
 
 import androidx.core.widget.NestedScrollView;
 
+import com.alibaba.fastjson.JSON;
 import com.fhx.property.R;
+import com.fhx.property.base.AppUrl;
 import com.fhx.property.base.BaseActivity;
+import com.fhx.property.bean.CarDetailBean;
 import com.fhx.property.bean.CarManageBean;
+import com.zhouyou.http.EasyHttp;
+import com.zhouyou.http.callback.SimpleCallBack;
+import com.zhouyou.http.exception.ApiException;
 
 /**
  * 车辆详情
@@ -19,9 +25,12 @@ import com.fhx.property.bean.CarManageBean;
 public class CarMsgActivity extends BaseActivity implements View.OnClickListener {
     private ImageView imageLeft, imageRight;
     private TextView tv_title, tv_car_number;
+    private TextView tv_owner_name,tv_owner_phone;
+    private TextView tv_bind_date,tv_parkingNo;
+    private TextView tv_car_type;
     private View view_title;
     private NestedScrollView nested;
-    private CarManageBean manageBean;
+    private String carId;
 
     @Override
     protected int initLayout() {
@@ -35,14 +44,19 @@ public class CarMsgActivity extends BaseActivity implements View.OnClickListener
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_car_number = (TextView) findViewById(R.id.tv_car_number);
         view_title = findViewById(R.id.view_title);
+        tv_owner_name = (TextView) findViewById(R.id.tv_owner_name);
+        tv_owner_phone = (TextView) findViewById(R.id.tv_owner_phone);
+        tv_bind_date = (TextView) findViewById(R.id.tv_bind_date);
+        tv_car_type = (TextView) findViewById(R.id.tv_car_type);
+        tv_parkingNo = (TextView) findViewById(R.id.tv_parkingNo);
         nested = (NestedScrollView) findViewById(R.id.nested);
     }
 
     @Override
     protected void initData() {
-        manageBean = (CarManageBean) getIntent().getSerializableExtra("bean");
+        carId = getIntent().getStringExtra("jumpOne");
         tv_title.setText("车辆详情");
-        tv_car_number.setText(manageBean.getCarNum());
+        carDetail();
     }
 
 
@@ -86,7 +100,50 @@ public class CarMsgActivity extends BaseActivity implements View.OnClickListener
         popupMenu.show();
     }
 
+    /**
+     * 获取车辆信息详情
+     */
+    private void carDetail(){
+        EasyHttp.get(AppUrl.CarDetail)
+                .syncRequest(false)
+                .params("id",carId)
+                .execute(new SimpleCallBack<String>() {
+                    @Override
+                    public void onError(ApiException e) {
+                        Log.e("error",e.getMessage());
+                    }
 
+                    @Override
+                    public void onSuccess(String s) {
+                        CarDetailBean carDetailBean = JSON.parseObject(s, CarDetailBean.class);
+                        if (carDetailBean.isSuccess()){
+                            CarDetailBean.DataBean data = carDetailBean.getData();
+                            tv_car_number.setText(data.getCarNo());
+                            tv_owner_name.setText(data.getCarOwner());
+                            tv_owner_phone.setText(data.getOwnerPhone());
+                            tv_bind_date.setText(data.getCreateTime());
+                            tv_parkingNo.setText(data.getParkingNo());
+                            switch (data.getCarType()){
+                                case "0":
+                                    tv_car_type.setText("临时车");
+                                    break;
+                                case "1":
+                                    tv_car_type.setText("登记车");
+                                    break;
+                                case "2":
+                                    tv_car_type.setText("认证签约车");
+                                    break;
+                            }
+                        }else {
+                            ToastShort(carDetailBean.getMsg());
+                        }
+                    }
+                });
+    }
+
+    /**
+     * 标题透明渐变
+     */
     private void nestListen() {
         nested.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override

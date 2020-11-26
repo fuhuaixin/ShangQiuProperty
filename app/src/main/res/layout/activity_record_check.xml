@@ -70,12 +70,14 @@
                 android:layout_height="wrap_content">
 
                 <LinearLayout
+                    android:id="@+id/ll_work_month"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
                     <TextView
+                        android:id="@+id/tv_countSign"
                         android:text="25"
                         android:textSize="40sp"
                         android:textColor="@color/tv333"
@@ -97,6 +99,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
                     <TextView
+                        android:id="@+id/tv_countLate"
                         android:text="1"
                         android:textSize="40sp"
                         android:textColor="@color/tv333"
@@ -118,6 +121,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
                     <TextView
+                        android:id="@+id/tv_countEarly"
                         android:text="1"
                         android:textSize="40sp"
                         android:textColor="@color/tv333"

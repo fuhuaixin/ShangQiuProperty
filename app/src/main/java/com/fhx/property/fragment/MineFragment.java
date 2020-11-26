@@ -1,6 +1,7 @@
 package com.fhx.property.fragment;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.fastjson.JSON;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.fhx.property.R;
 import com.fhx.property.activity.login.LoginActivity;
@@ -24,14 +26,24 @@ import com.fhx.property.activity.mine.ChangePasswordActivity;
 import com.fhx.property.activity.mine.FeedbackActivity;
 import com.fhx.property.activity.mine.WorkDiaryActivity;
 import com.fhx.property.adapter.MineOAAdapter;
+import com.fhx.property.base.AppUrl;
 import com.fhx.property.base.BaseFragment;
 import com.fhx.property.bean.MineOABean;
+import com.fhx.property.bean.SuccessBean2;
 import com.fhx.property.utils.CommonDialog;
 import com.fhx.property.utils.CutToUtils;
 import com.tencent.mmkv.MMKV;
+import com.zhouyou.http.EasyHttp;
+import com.zhouyou.http.callback.SimpleCallBack;
+import com.zhouyou.http.cookie.CookieManger;
+import com.zhouyou.http.cookie.PersistentCookieStore;
+import com.zhouyou.http.exception.ApiException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
+
+import okhttp3.Cookie;
 
 /**
  * 我的fragment
@@ -68,6 +80,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void setViewData(View view) {
         super.setViewData(view);
+
+
+
+
         mineOABeanList.clear();
         mineOABeanList.add(new MineOABean(R.mipmap.icon_mine_clock, "打卡", 0));
         mineOABeanList.add(new MineOABean(R.mipmap.icon_mine_leave, "请假", 0));
@@ -138,7 +154,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             case R.id.tv_logout://登出
                 initDialog();
                 break;
-            case R.id.rl_change_msg://登出
+            case R.id.rl_change_msg://
                CutToUtils.getInstance().JumpTo(getActivity(), ChangeDetailsActivity.class);
                 break;
         }
@@ -156,12 +172,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 .setSingle(false).setOnClickBottomListener(new CommonDialog.OnClickBottomListener() {
             @Override
             public void onPositiveClick() {
+                LogOut();
                 dialog.dismiss();
-                mmkv.removeValueForKey("token");
-                mmkv.removeValueForKey("userName");
-                mmkv.removeValueForKey("passWord");
-                CutToUtils.getInstance().JumpTo(getActivity(), LoginActivity.class);
-                getActivity().finish();
             }
 
             @Override
@@ -170,5 +182,30 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 Toast.makeText(getContext(),"取消",Toast.LENGTH_SHORT).show();
             }
         }).show();
+    }
+
+    private void LogOut(){
+        EasyHttp.get(AppUrl.Logout)
+                .syncRequest(false)
+//                .headers("Admin-Token",mmkv.decodeString("token"))
+                .accessToken(true)
+                .execute(new SimpleCallBack<String>() {
+                    @Override
+                    public void onError(ApiException e) {
+                        Log.e("error",e.getMessage());
+                    }
+
+                    @Override
+                    public void onSuccess(String s) {
+                        SuccessBean2 successBean2 = JSON.parseObject(s, SuccessBean2.class);
+                        if (successBean2.isSuccess()){
+                            mmkv.removeValueForKey("token");
+                            mmkv.removeValueForKey("userName");
+                            mmkv.removeValueForKey("passWord");
+                            CutToUtils.getInstance().JumpTo(getActivity(), LoginActivity.class);
+                            getActivity().finish();
+                        }
+                    }
+                });
     }
 }

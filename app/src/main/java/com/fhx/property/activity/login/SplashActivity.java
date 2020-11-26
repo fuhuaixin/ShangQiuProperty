@@ -33,13 +33,14 @@ public class SplashActivity extends BaseActivity {
         Log.e("fhxx", "存储账号密码" + userName + "\n" + passWord);
         new Handler().postDelayed(new Runnable() {
             public void run() {
-                if (userName != null && passWord != null && !userName.equals("") && !passWord.equals("")) {
+                /*if (userName != null && passWord != null && !userName.equals("") && !passWord.equals("")) {
                     CutToUtils.getInstance().JumpTo(SplashActivity.this, MainActivity.class);
                     finish();
                 } else {
                     CutToUtils.getInstance().JumpTo(SplashActivity.this, LoginActivity.class);
                     finish();
-                }
+                }*/
+                CutToUtils.getInstance().JumpTo(SplashActivity.this, LoginActivity.class);
             }
         }, 2000);
     }
@@ -54,5 +55,9 @@ public class SplashActivity extends BaseActivity {
 
     }
 
-
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
 }

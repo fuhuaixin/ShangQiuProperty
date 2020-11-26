@@ -31,6 +31,8 @@
             android:layout_height="match_parent"
             android:background="@null"
             android:hint="搜索报修记录"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:textColor="@color/tv333"
@@ -40,14 +42,15 @@
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/refresh_repairs"
-        android:layout_above="@+id/tv_to_repairs"
-        android:layout_below="@+id/ll_search"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tv_to_repairs"
+        android:layout_below="@+id/ll_search">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycle_repairs"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 
@@ -64,10 +67,10 @@
         android:textSize="16sp" />
 
     <include
-        android:visibility="gone"
-        android:layout_below="@+id/include_title"
         layout="@layout/layout_empty"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="match_parent" />
+        android:layout_below="@+id/include_title"
+        android:visibility="gone" />
 
 </RelativeLayout>

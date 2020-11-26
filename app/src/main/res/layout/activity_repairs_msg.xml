@@ -119,7 +119,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <View
                     android:layout_width="match_parent"
@@ -127,21 +127,23 @@
                     android:background="@color/all_line" />
 
                 <RatingBar
+                    android:id="@+id/ratingBar_finish"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:isIndicator="true"
                     android:numStars="5"
-                    android:progressTint="#ff8003"
                     android:rating="3"
+                    android:progressTint="#ff8003"
                     android:stepSize="1" />
 
                 <TextView
+                    android:id="@+id/tv_eva_finish"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="20dp"
-                    android:text="维修服务已完成，维修师傅弄得真好，真快。"
+                    android:text="评价"
                     android:textColor="@color/tvaaa"
                     android:textSize="12sp" />
 

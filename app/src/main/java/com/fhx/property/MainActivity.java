@@ -11,6 +11,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -21,9 +22,14 @@ import com.fhx.property.fragment.HomeFragment;
 import com.fhx.property.fragment.MineFragment;
 import com.fhx.property.fragment.ScanFragment;
 import com.fhx.property.utils.CutToUtils;
+import com.zhouyou.http.EasyHttp;
+import com.zhouyou.http.cookie.CookieManger;
+import com.zhouyou.http.cookie.PersistentCookieStore;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Cookie;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         fragments.add(new MineFragment());
 
         SwitchFragment(0);
+
     }
 
 

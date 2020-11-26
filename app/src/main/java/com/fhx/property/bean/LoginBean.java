@@ -74,6 +74,7 @@ public class LoginBean {
             private String password;
             private Object createTime;
             private Object creator;
+            private String  originId;
 
             public String getUserId() {
                 return userId;
@@ -113,6 +114,14 @@ public class LoginBean {
 
             public void setCreator(Object creator) {
                 this.creator = creator;
+            }
+
+            public String getOriginId() {
+                return originId;
+            }
+
+            public void setOriginId(String originId) {
+                this.originId = originId;
             }
         }
     }

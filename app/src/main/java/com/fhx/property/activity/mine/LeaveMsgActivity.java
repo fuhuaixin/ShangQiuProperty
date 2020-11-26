@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.fhx.property.R;
 import com.fhx.property.base.BaseActivity;
-import com.fhx.property.bean.LeaveRecordBean;
 
 /**
  * 请假详情
@@ -22,7 +21,6 @@ public class LeaveMsgActivity extends BaseActivity implements View.OnClickListen
     private ImageView image_type_header;
     private TextView tv_progress, tv_back_cause, tv_leave_title, tv_commit_time, tv_back, tv_pass;
     private LinearLayout ll_progress, ll_bottom;
-    private LeaveRecordBean leaveRecordBean;
     private int type; //1是看 2是处理
     private int progress;
     private Dialog backDialog;

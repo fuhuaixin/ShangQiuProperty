@@ -47,9 +47,9 @@ public class LeaveActivity extends BaseActivity implements View.OnClickListener 
 
         beanList.add(new LeaveBean(R.mipmap.icon_leave_shi,"事假",0));
         beanList.add(new LeaveBean(R.mipmap.icon_leave_bing,"病假",0));
-        beanList.add(new LeaveBean(R.mipmap.icon_leave_nian,"年假",5));
+        beanList.add(new LeaveBean(R.mipmap.icon_leave_pei,"临时假",0));
+        beanList.add(new LeaveBean(R.mipmap.icon_leave_nian,"年假",0));
         beanList.add(new LeaveBean(R.mipmap.icon_leave_chan,"产假",0));
-        beanList.add(new LeaveBean(R.mipmap.icon_leave_pei,"陪产假",0));
         beanList.add(new LeaveBean(R.mipmap.icon_leave_hun,"婚假",0));
         beanList.add(new LeaveBean(R.mipmap.icon_leave_sang,"丧假",0));
 

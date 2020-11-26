@@ -13,12 +13,18 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.fastjson.JSON;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.fhx.property.R;
 import com.fhx.property.adapter.ContactsTitleAdapter;
+import com.fhx.property.base.AppUrl;
 import com.fhx.property.bean.ChooseBean;
+import com.fhx.property.bean.ContactsBean;
 import com.fhx.property.bean.EventContactsBean;
 import com.fhx.property.fragment.ContactsFirstFragment;
+import com.zhouyou.http.EasyHttp;
+import com.zhouyou.http.callback.SimpleCallBack;
+import com.zhouyou.http.exception.ApiException;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -42,6 +48,9 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
     public List<String> mTag = new ArrayList<>();
     public List<ChooseBean> mTitle = new ArrayList<>();
 
+    private List<String> oneTitle =new ArrayList<>();
+    private List<String> twoTitle =new ArrayList<>();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +71,7 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
 
 
     private void initData() {
+        getList();
         tvTitle.setText("通讯录");
         mTag.add("tag");
         mTitle.add(new ChooseBean("华庭物业有限公司",1));
@@ -71,10 +81,7 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recycle_title.setLayoutManager(linearLayoutManager);
         recycle_title.setAdapter(titleAdapter);
-        ContactsFirstFragment contactsFirstFragment = new ContactsFirstFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.frameLayout, contactsFirstFragment);
-        fragmentTransaction.commit();
+
     }
 
     private void initListen() {
@@ -153,5 +160,30 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    private void getList(){
+        EasyHttp.get(AppUrl.DeptreeList)
+                .syncRequest(false)
+                .execute(new SimpleCallBack<String>() {
+                    @Override
+                    public void onError(ApiException e) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(String s) {
+                        ContactsBean contactsBean = JSON.parseObject(s, ContactsBean.class);
+                        if (contactsBean.isSuccess()){
+                            for (int i = 0; i < contactsBean.getData().size(); i++) {
+                                oneTitle.add(contactsBean.getData().get(i).getName());
+                            }
+                            ContactsFirstFragment contactsFirstFragment = new ContactsFirstFragment(oneTitle);
+                            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                            fragmentTransaction.add(R.id.frameLayout, contactsFirstFragment);
+                            fragmentTransaction.commit();
+                        }
+                    }
+                });
     }
 }

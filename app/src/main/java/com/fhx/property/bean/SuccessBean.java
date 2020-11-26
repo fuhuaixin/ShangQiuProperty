@@ -8,7 +8,7 @@ public class SuccessBean {
      */
 
     private boolean success;
-    private boolean data;
+    private Object data;
     private String msg;
 
     public String getMsg() {
@@ -27,11 +27,11 @@ public class SuccessBean {
         this.success = success;
     }
 
-    public boolean isData() {
+    public Object getData() {
         return data;
     }
 
-    public void setData(boolean data) {
+    public void setData(Object data) {
         this.data = data;
     }
 }

@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -14,6 +15,7 @@ import com.fhx.property.R;
 import com.fhx.property.adapter.RepairsMsgImageAdapter;
 import com.fhx.property.base.AppUrl;
 import com.fhx.property.base.BaseActivity;
+import com.fhx.property.bean.EvaMsgBean;
 import com.fhx.property.bean.RepairsCommitBean;
 import com.fhx.property.bean.SuccessBean;
 import com.fhx.property.utils.CutToUtils;
@@ -45,6 +47,8 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
     private LinearLayout ll_revocation;
     private LinearLayout ll_repairs_man;
     private RecyclerView recycle_image;
+    private RatingBar ratingBar_finish;
+    private TextView tv_eva_finish;
 
 
     private RepairsMsgImageAdapter imageAdapter;
@@ -73,16 +77,24 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
         ll_revocation = (LinearLayout) findViewById(R.id.ll_revocation);
         ll_repairs_man = (LinearLayout) findViewById(R.id.ll_repairs_man);
         recycle_image = (RecyclerView) findViewById(R.id.recycle_image);
+        ratingBar_finish = (RatingBar) findViewById(R.id.ratingBar_finish);
+        tv_eva_finish = (TextView) findViewById(R.id.tv_eva_finish);
     }
 
     @Override
-    protected void initData() {
-        tvTitle.setText("报修详情");
-
+    protected void onResume() {
+        super.onResume();
         repairsCommitBean = (RepairsCommitBean.DataBean.RecordsBean) getIntent().getSerializableExtra("bean");
         Log.e("fhxx", repairsCommitBean.getContent() + repairsCommitBean.getStatus());
 
-        Status(repairsCommitBean.getStatus());
+        if (mmkv.decodeBool("eva")) {
+            ToastShort("true");
+            Status("5");
+        } else {
+            Status(repairsCommitBean.getStatus());
+//            ToastShort("false");
+        }
+
         tv_msg.setText(repairsCommitBean.getContent());
         imageList.add("https://iknow-pic.cdn.bcebos.com/fcfaaf51f3deb48f12d46640f21f3a292cf578eb?x-bce-process=image/resize,m_lfit,w_600,h_800,limit_1");
         imageList.add("https://iknow-pic.cdn.bcebos.com/7af40ad162d9f2d3659ee371abec8a136227cca5?x-bce-process=image/resize,m_lfit,w_600,h_800,limit_1");
@@ -90,12 +102,17 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
         imageAdapter = new RepairsMsgImageAdapter(imageList);
         recycle_image.setLayoutManager(new GridLayoutManager(this, 3));
         recycle_image.setAdapter(imageAdapter);
+        imageAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void initData() {
+        tvTitle.setText("报修详情");
 
     }
 
     @Override
     protected void initListen() {
-
         imageLeft.setOnClickListener(this);
         ll_no_evaluate.setOnClickListener(this);
         tv_evaluate.setOnClickListener(this);
@@ -182,6 +199,7 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
                 image_finish.setImageResource(R.mipmap.icon_repairs_finish_sel);
                 view_ing.setBackgroundResource(R.color.col_repairs_blue);
                 view_finish.setBackgroundResource(R.color.col_repairs_blue);
+                getEvaMsg(repairsCommitBean.getRepairId());
                 break;
         }
     }
@@ -189,25 +207,49 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
     /**
      * 撤回报修
      */
-    private void cancle(String id){
+    private void cancle(String id) {
         EasyHttp.put(AppUrl.RepairCancel)
                 .syncRequest(false)
-                .params("repairId",id)
+                .params("repairId", id)
                 .execute(new SimpleCallBack<String>() {
                     @Override
                     public void onError(ApiException e) {
-                        Log.e("error",e.getMessage());
+                        Log.e("error", e.getMessage());
                     }
 
                     @Override
                     public void onSuccess(String s) {
                         SuccessBean successBean = JSON.parseObject(s, SuccessBean.class);
-                        if (successBean.isSuccess()){
+                        if (successBean.isSuccess()) {
                             ToastShort("撤回成功");
                             finish();
                             overridePendingTransition(R.anim.activity_out_from_animation, R.anim.activity_out_to_animation);
-                        }else {
+                        } else {
                             ToastShort(successBean.getMsg());
+                        }
+                    }
+                });
+    }
+
+    /**
+     * 查询评价详情
+     */
+    private void getEvaMsg(String id) {
+        EasyHttp.get(AppUrl.EvaluteGet)
+                .syncRequest(false)
+                .params("id", id)
+                .execute(new SimpleCallBack<String>() {
+                    @Override
+                    public void onError(ApiException e) {
+                        Log.e("error", e.getMessage());
+                    }
+
+                    @Override
+                    public void onSuccess(String s) {
+                        EvaMsgBean evaMsgBean = JSON.parseObject(s, EvaMsgBean.class);
+                        if (evaMsgBean.isSuccess()) {
+                            ratingBar_finish.setRating(evaMsgBean.getData().getRateScore());
+                            tv_eva_finish.setText(evaMsgBean.getData().getContent());
                         }
                     }
                 });

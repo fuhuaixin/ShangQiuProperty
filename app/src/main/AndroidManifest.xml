@@ -259,6 +259,10 @@
         <activity
             android:name=".activity.mine.RecordCheckActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--出勤记录-->
+        <activity
+            android:name=".activity.mine.ClockDayActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--请假-->
         <activity
             android:name=".activity.mine.LeaveActivity"

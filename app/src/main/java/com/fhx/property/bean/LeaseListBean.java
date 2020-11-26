@@ -7,10 +7,20 @@ public class LeaseListBean extends BaseBean {
     private String title ="";
     private String room ="";
     private String image ="";
+    private String spaceId ="";
 
-    public LeaseListBean(String title, String room) {
+    public LeaseListBean(String title, String room,String spaceId) {
         this.title = title;
         this.room = room;
+        this.spaceId = spaceId;
+    }
+
+    public String getSpaceId() {
+        return spaceId;
+    }
+
+    public void setSpaceId(String spaceId) {
+        this.spaceId = spaceId;
     }
 
     public String getTitle() {
