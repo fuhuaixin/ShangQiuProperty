@@ -126,7 +126,7 @@ public class DateAndTimeDialog extends DialogFragment {
         tv_sure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtils.showShortToast(getContext(),tag );
+//                ToastUtils.showShortToast(getContext(),tag );
 //                mmkv.encode("dateAndTime",);
                 String message = mmkv.decodeString("chooseDate") + " " + mmkv.decodeString("chooseTime");
 

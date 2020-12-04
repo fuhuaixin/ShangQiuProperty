@@ -102,7 +102,8 @@ public class NotifyListActivity extends BaseActivity {
         adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                CutToUtils.getInstance().JumpToOne(NotifyListActivity.this, NotifyMsgActivity.class, mList.get(position).getNewsId());
+//                CutToUtils.getInstance().JumpToOne(NotifyListActivity.this, NotifyMsgActivity.class, mList.get(position).getNewsId());
+                CutToUtils.getInstance().JumpToTwo(NotifyListActivity.this, WebActivity.class, "通知公告",AppUrl.NEWSTITLEURL+mList.get(position).getNewsId());
             }
         });
 
@@ -136,7 +137,7 @@ public class NotifyListActivity extends BaseActivity {
                     //实现搜索逻辑
 //                    gotoSearch();
                     mList.clear();
-                    page=1;
+                    page = 1;
                     getNews(page);
                     return true;
                 }
@@ -151,39 +152,38 @@ public class NotifyListActivity extends BaseActivity {
     private void getNews(int page) {
 
         GetRequest getRequest = EasyHttp.get(AppUrl.NewsList);
-        getRequest.syncRequest(false);
         getRequest.params("pageNum", String.valueOf(page));
         getRequest.params("pageSize", "5");
-        if (etSearch.getText().toString()!=null&&!etSearch.getText().toString().equals("")){
+        getRequest.params("target", "innerAnnounce");
+        if (etSearch.getText().toString() != null && !etSearch.getText().toString().equals("")) {
             getRequest.params("title", etSearch.getText().toString());
         }
         getRequest.execute(new SimpleCallBack<String>() {
-                    @Override
-                    public void onError(ApiException e) {
-                        Log.e("error", e.getMessage());
-                    }
+            @Override
+            public void onError(ApiException e) {
+                Log.e("error", e.getMessage());
+            }
 
-                    @Override
-                    public void onSuccess(String s) {
-                        refreshLayout.finishLoadMore();
-                        refreshLayout.finishRefresh();
-                        NotifyListBean notifyListBean = JSON.parseObject(s, NotifyListBean.class);
-                        if (notifyListBean.isSuccess()) {
-                            NotifyListBean.DataBean data = notifyListBean.getData();
-                            mList.addAll(data.getRecords());
-                            if (mList.size() > 0) {
-                                ll_empty.setVisibility(View.GONE);
-                            } else {
-                                ll_empty.setVisibility(View.VISIBLE);
-                                image_top.setImageResource(R.mipmap.icon_empty_notice);
-                                tv_msg.setText("暂无公告");
-                            }
-                            adapter.notifyDataSetChanged();
-                        }
+            @Override
+            public void onSuccess(String s) {
+                refreshLayout.finishLoadMore();
+                refreshLayout.finishRefresh();
+                NotifyListBean notifyListBean = JSON.parseObject(s, NotifyListBean.class);
+                if (notifyListBean.isSuccess()) {
+                    NotifyListBean.DataBean data = notifyListBean.getData();
+                    mList.addAll(data.getRecords());
+                    if (mList.size() > 0) {
+                        ll_empty.setVisibility(View.GONE);
+                    } else {
+                        ll_empty.setVisibility(View.VISIBLE);
+                        image_top.setImageResource(R.mipmap.icon_empty_notice);
+                        tv_msg.setText("暂无公告");
                     }
-                });
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
-
 
 
 }

@@ -1,8 +1,12 @@
 package com.fhx.property.base;
 
 public class AppUrl {
-    public static final String BASEURL = "http://192.168.10.50:8083/"; //测试(测试环境)
-//    public static final String BASEURL = "http://192.168.10.19:8083/"; //正式(测试环境)2
+//    public static final String BASEURL = "http://192.168.10.50:8083/"; //测试(测试环境)
+    public static final String BASEURL = "http://192.168.10.241:8083/"; //正式(测试环境)2
+
+    //通知公告 资讯 baseUrl
+    public static final String NEWSTITLEURL ="http://192.168.10.50:8055/smartbuilding_light/#/newsshow?id=";
+
 
     //登录
     public static final String Login = BASEURL + "login/check";
@@ -12,7 +16,7 @@ public class AppUrl {
     //获取各个监测设备最新数据
     public static final String EnvList = BASEURL + "env/list";
 
-    //通知公告列表查询接口
+    //通知公告列表查询接口 内部通告: innerAnnounce  内部新闻: innerNews
     public static final String NewsList = BASEURL + "news/list";
     //通知公告列表详情接口
     public static final String NewsMsg = BASEURL + "news/detail";
@@ -55,6 +59,10 @@ public class AppUrl {
     public static final String AttendRecordList = BASEURL + "attend/record/list";
     //考勤统计-员工
     public static final String AttendRecordStat = BASEURL + "attend/record/stat_emp";
+
+    //图片上传功能
+    public static final String ImageUpLoad = BASEURL + "news/upload";
+
 
 
 

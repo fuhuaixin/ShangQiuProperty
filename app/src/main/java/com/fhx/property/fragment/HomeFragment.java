@@ -234,6 +234,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
                 .syncRequest(false)
                 .params("pageNum","1")
                 .params("pageSize","5")
+                .params("target", "innerAnnounce")
                 .execute(new SimpleCallBack<String>() {
                     @Override
                     public void onError(ApiException e) {

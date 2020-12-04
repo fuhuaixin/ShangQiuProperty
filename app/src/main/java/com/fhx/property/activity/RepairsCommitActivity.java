@@ -30,6 +30,7 @@ import com.fhx.property.bean.SuccessBean;
 import com.fhx.property.utils.ListDialog;
 import com.scrat.app.selectorlibrary.ImageSelector;
 import com.zhouyou.http.EasyHttp;
+import com.zhouyou.http.body.UIProgressResponseCallBack;
 import com.zhouyou.http.callback.SimpleCallBack;
 import com.zhouyou.http.exception.ApiException;
 
@@ -101,12 +102,6 @@ public class RepairsCommitActivity extends BaseActivity implements View.OnClickL
         imageLeft.setImageResource(R.mipmap.icon_back_all_x);
         imageRight.setVisibility(View.VISIBLE);
         tvTitle.setText("我要报修");
-
-//        imageList.add("https://iknow-pic.cdn.bcebos.com/fcfaaf51f3deb48f12d46640f21f3a292cf578eb?x-bce-process=image/resize,m_lfit,w_600,h_800,limit_1");
-//        imageList.add("https://iknow-pic.cdn.bcebos.com/7af40ad162d9f2d3659ee371abec8a136227cca5?x-bce-process=image/resize,m_lfit,w_600,h_800,limit_1");
-//        imageList.add("https://iknow-pic.cdn.bcebos.com/7af40ad162d9f2d3659ee371abec8a136227cca5?x-bce-process=image/resize,m_lfit,w_600,h_800,limit_1");
-        Log.e("fhxx", imageList.size() + " ----- ");
-
 
         chooseImgAdapter = new ChooseImgAdapter(imageList);
         chooseSize();
@@ -205,10 +200,11 @@ public class RepairsCommitActivity extends BaseActivity implements View.OnClickL
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CAMERA && resultCode == RESULT_OK) {
             Log.e("TAG", "拍照---------" + FileProvider.getUriForFile(this, "com.fhx.property.provider", file));
+            Log.e("TAG", "拍照---------" + file);
 //            imageView.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
             imageList.add(file.getAbsolutePath());
             chooseSize();
-
+            upImage(file);
             //在手机相册中显示刚拍摄的图片
             Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             Uri contentUri = Uri.fromFile(file);
@@ -255,12 +251,15 @@ public class RepairsCommitActivity extends BaseActivity implements View.OnClickL
     }
 
     /**
-     * 选择图片回调
+     * 选择图片
      *
      * @param data
      */
     private void showContent(Intent data) {
         List<String> paths = ImageSelector.getImagePaths(data);
+        File file = new File(paths.get(0));
+        Log.e("fhxx", "选择图片" + file);
+        upImage(file);
         if (paths.isEmpty()) {
             for (int i = 0; i < paths.size(); i++) {
                 imageList.add(paths.get(i));
@@ -353,6 +352,38 @@ public class RepairsCommitActivity extends BaseActivity implements View.OnClickL
         }
 
 
+    }
+
+    /**
+     * 图片上传
+     */
+    private void upImage(File file) {
+        UIProgressResponseCallBack uiProgressResponseCallBack = new UIProgressResponseCallBack() {
+            @Override
+            public void onUIResponseProgress(long bytesRead, long contentLength, boolean done) {
+                int progress = (int) (bytesRead * 100 / contentLength);
+                Log.e("fhxx", "上传" + progress);
+                if (done) {
+                    ToastShort("上传成功");
+                }
+            }
+        };
+        EasyHttp.post(AppUrl.ImageUpLoad)
+                .syncRequest(false)
+                .timeStamp(true)
+                .params("file", file, uiProgressResponseCallBack)
+                .execute(new SimpleCallBack<String>() {
+                    @Override
+                    public void onError(ApiException e) {
+                        Log.e("imageError", e.getMessage());
+                    }
+
+                    @Override
+                    public void onSuccess(String s) {
+                        SuccessBean successBean = JSON.parseObject(s, SuccessBean.class);
+
+                    }
+                });
     }
 
 }
