@@ -111,7 +111,11 @@ public class RepairsActivity extends BaseActivity implements View.OnClickListene
         repairsCommitAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                CutToUtils.getInstance().JumpToBean(RepairsActivity.this,RepairsMsgActivity.class,repairsBeanList.get(position));
+                if (repairsBeanList.get(position).getStatus().equals("0")&&repairsBeanList.get(position).getCustomerId().equals(mmkv.decodeString("userId"))){
+                    CutToUtils.getInstance().JumpToOne(RepairsActivity.this,RepairsCommitActivity.class,repairsBeanList.get(position).getRepairId());
+                }else {
+                    CutToUtils.getInstance().JumpToOne(RepairsActivity.this,RepairsMsgActivity.class,repairsBeanList.get(position).getRepairId());
+                }
             }
         });
 

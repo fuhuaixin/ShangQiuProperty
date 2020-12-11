@@ -1,11 +1,8 @@
 package com.fhx.property.fragment;
 
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -52,7 +49,7 @@ import java.util.List;
 /**
  * 首页Fragment
  */
-public class HomeFragment extends BaseFragment implements View.OnClickListener{
+public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     private ListDialog listDialog;
     private Banner home_banner;
@@ -60,16 +57,17 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
     private RecyclerView recycle_task;
     private RelativeLayout rl_notify_list;
     private ImageView image_weather;
-    private TextView tv_inform_one,tv_inform_two;
+    private TextView tv_inform_one, tv_inform_two;
     //banner list
 //    private List<String> bannerList =new ArrayList<>();
-    private List<Integer> bannerList =new ArrayList<>();
+    private List<Integer> bannerList = new ArrayList<>();
     private HomeNavAdapter homeNavAdapter;
     private HomeTaskAdapter homeTaskAdapter;
-    private List<HomeNavBean> homeNavBeanList =new ArrayList<>();
-    private List<HomeTaskBean> homeTaskBeanList =new ArrayList<>();
+    private List<HomeNavBean> homeNavBeanList = new ArrayList<>();
+    private List<HomeTaskBean> homeTaskBeanList = new ArrayList<>();
     private List<String> dialogList = new ArrayList<>();
     private LinearLayout ll_fault_notifi;
+
     @Override
     public int setLayoutId() {
         return R.layout.fragment_home;
@@ -78,14 +76,14 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
     @Override
     public void findViewById(View view) {
         super.findViewById(view);
-        home_banner =view.findViewById(R.id.home_banner);
-        recycle_nav =view.findViewById(R.id.recycle_nav);
-        recycle_task =view.findViewById(R.id.recycle_task);
-        rl_notify_list =view.findViewById(R.id.rl_notify_list);
-        ll_fault_notifi =view.findViewById(R.id.ll_fault_notifi);
-        image_weather =view.findViewById(R.id.image_weather);
-        tv_inform_one =view.findViewById(R.id.tv_inform_one);
-        tv_inform_two =view.findViewById(R.id.tv_inform_two);
+        home_banner = view.findViewById(R.id.home_banner);
+        recycle_nav = view.findViewById(R.id.recycle_nav);
+        recycle_task = view.findViewById(R.id.recycle_task);
+        rl_notify_list = view.findViewById(R.id.rl_notify_list);
+        ll_fault_notifi = view.findViewById(R.id.ll_fault_notifi);
+        image_weather = view.findViewById(R.id.image_weather);
+        tv_inform_one = view.findViewById(R.id.tv_inform_one);
+        tv_inform_two = view.findViewById(R.id.tv_inform_two);
     }
 
     @Override
@@ -93,31 +91,31 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
         super.setViewData(view);
         getNotify();
         homeNavBeanList.clear();
-        homeNavBeanList.add(new HomeNavBean(R.mipmap.icon_repairs,"报修"));
-        homeNavBeanList.add(new HomeNavBean(R.mipmap.icon_device,"设备管理"));
-        homeNavBeanList.add(new HomeNavBean(R.mipmap.icon_contact,"通讯录"));
-        homeNavBeanList.add(new HomeNavBean(R.mipmap.icon_lease,"租赁管理"));
-        homeNavBeanList.add(new HomeNavBean(R.mipmap.icon_bill,"费用催缴"));
-        homeNavBeanList.add(new HomeNavBean(R.mipmap.icon_goods,"物资申领"));
-        homeNavBeanList.add(new HomeNavBean(R.mipmap.icon_maintain,"设备维护"));
-        homeNavBeanList.add(new HomeNavBean(R.mipmap.icon_car,"车辆管理"));
+        homeNavBeanList.add(new HomeNavBean(R.mipmap.icon_repairs, "报修"));
+        homeNavBeanList.add(new HomeNavBean(R.mipmap.icon_device, "设备管理"));
+        homeNavBeanList.add(new HomeNavBean(R.mipmap.icon_contact, "通讯录"));
+        homeNavBeanList.add(new HomeNavBean(R.mipmap.icon_lease, "租赁管理"));
+        homeNavBeanList.add(new HomeNavBean(R.mipmap.icon_bill, "费用催缴"));
+        homeNavBeanList.add(new HomeNavBean(R.mipmap.icon_goods, "物资申领"));
+        homeNavBeanList.add(new HomeNavBean(R.mipmap.icon_maintain, "设备维护"));
+        homeNavBeanList.add(new HomeNavBean(R.mipmap.icon_car, "车辆管理"));
 
         homeTaskBeanList.clear();
-        homeTaskBeanList.add(new HomeTaskBean("任务1","任务一详情","10:20",1));
-        homeTaskBeanList.add(new HomeTaskBean("任务2","任务二详情","10:30",1));
-        homeTaskBeanList.add(new HomeTaskBean("任务3","任务三详情","10:40",1));
-        homeTaskBeanList.add(new HomeTaskBean("任务4","任务四详情","10:40",0));
+        homeTaskBeanList.add(new HomeTaskBean("任务1", "任务一详情", "10:20", 1));
+        homeTaskBeanList.add(new HomeTaskBean("任务2", "任务二详情", "10:30", 1));
+        homeTaskBeanList.add(new HomeTaskBean("任务3", "任务三详情", "10:40", 1));
+        homeTaskBeanList.add(new HomeTaskBean("任务4", "任务四详情", "10:40", 0));
 
-        homeNavAdapter =new HomeNavAdapter(homeNavBeanList);
+        homeNavAdapter = new HomeNavAdapter(homeNavBeanList);
 
         bannerList.add(R.mipmap.image_banners);
         bannerList.add(R.mipmap.image_banners);
 
-        recycle_nav.setLayoutManager(new GridLayoutManager(getContext(),5));
+        recycle_nav.setLayoutManager(new GridLayoutManager(getContext(), 5));
         recycle_nav.setAdapter(homeNavAdapter);
 
 
-        homeTaskAdapter =new HomeTaskAdapter(homeTaskBeanList);
+        homeTaskAdapter = new HomeTaskAdapter(homeTaskBeanList);
         recycle_task.setLayoutManager(new LinearLayoutManager(getContext()));
         recycle_task.setAdapter(homeTaskAdapter);
 
@@ -143,13 +141,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
                         iv.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Toast.makeText(getContext(), "点击了"+index, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "点击了" + index, Toast.LENGTH_SHORT).show();
                             }
                         });
                         return iv;
                     }
                 })
-                .setPageTransformer(true,new ScaleInTransformer())
+                .setPageTransformer(true, new ScaleInTransformer())
                 .setRoundCorners(10f)
                 .setPages(bannerList);
     }
@@ -161,20 +159,20 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
         homeNavAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                if (homeNavBeanList.get(position).getTitle().equals("报修")){
+                if (homeNavBeanList.get(position).getTitle().equals("报修")) {
                     CutToUtils.getInstance().JumpTo(getActivity(), RepairsActivity.class);
-                }else if (homeNavBeanList.get(position).getTitle().equals("设备管理")){
+                } else if (homeNavBeanList.get(position).getTitle().equals("设备管理")) {
                     CutToUtils.getInstance().JumpTo(getActivity(), EquManageActivity.class);
-                }else if (homeNavBeanList.get(position).getTitle().equals("费用催缴")){
+                } else if (homeNavBeanList.get(position).getTitle().equals("费用催缴")) {
                     CutToUtils.getInstance().JumpTo(getActivity(), ReminderActivity.class);
-                }else if (homeNavBeanList.get(position).getTitle().equals("租赁管理")){
+                } else if (homeNavBeanList.get(position).getTitle().equals("租赁管理")) {
                     CutToUtils.getInstance().JumpTo(getActivity(), LeaseListActivity.class);
-                }else if (homeNavBeanList.get(position).getTitle().equals("车辆管理")){
+                } else if (homeNavBeanList.get(position).getTitle().equals("车辆管理")) {
                     CutToUtils.getInstance().JumpTo(getActivity(), CarManageActivity.class);
-                }else if (homeNavBeanList.get(position).getTitle().equals("通讯录")){
+                } else if (homeNavBeanList.get(position).getTitle().equals("通讯录")) {
                     CutToUtils.getInstance().JumpTo(getActivity(), ContactsActivity.class);
                 }
-                Toast.makeText(getContext(), "点击了"+position, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "点击了" + position, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -182,7 +180,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
         homeTaskAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                Toast.makeText(getContext(), "点击了item"+position, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "点击了item" + position, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -213,7 +211,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.rl_notify_list:
                 CutToUtils.getInstance().JumpTo(getActivity(), NotifyListActivity.class);
                 break;
@@ -227,24 +225,24 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
     }
 
     /**
-     *获取通知
+     * 获取通知
      */
-    private void getNotify(){
+    private void getNotify() {
         EasyHttp.get(AppUrl.NewsList)
                 .syncRequest(false)
-                .params("pageNum","1")
-                .params("pageSize","5")
+                .params("pageNum", "1")
+                .params("pageSize", "5")
                 .params("target", "innerAnnounce")
                 .execute(new SimpleCallBack<String>() {
                     @Override
                     public void onError(ApiException e) {
-                        Log.e("error",e.getMessage());
+                        Log.e("error", e.getMessage());
                     }
 
                     @Override
                     public void onSuccess(String s) {
                         NotifyListBean notifyListBean = JSON.parseObject(s, NotifyListBean.class);
-                        if (notifyListBean.isSuccess()){
+                        if (notifyListBean.isSuccess()) {
                             tv_inform_one.setText(notifyListBean.getData().getRecords().get(0).getTitle());
                             tv_inform_two.setText(notifyListBean.getData().getRecords().get(1).getTitle());
                         }

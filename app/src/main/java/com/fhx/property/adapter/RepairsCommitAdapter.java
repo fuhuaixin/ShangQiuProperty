@@ -20,26 +20,30 @@ public class RepairsCommitAdapter extends BaseQuickAdapter<RepairsCommitBean.Dat
         helper.setText(R.id.tv_msg,item.getContent())
                 .setText(R.id.tv_type_room,item.getNotes()+"");
 
-        switch (item.getStatus()){ // 1 已提交  2 处理中  3 已完成但未评价 4 已完成已评价
+        switch (item.getStatus()){ //
             case "0":
+                helper.setImageResource(R.id.image_status,R.mipmap.icon_repairs_complated);
+                helper.setText(R.id.tv_status,"已撤回");
+                break;
+            case "1":
                 helper.setImageResource(R.id.image_status,R.mipmap.icon_repairs_commit);
                 helper.setText(R.id.tv_status,"已提交");
                 break;
-            case "1":
+            case "2":
                 helper.setImageResource(R.id.image_status,R.mipmap.icon_repairs_ing);
                 helper.setText(R.id.tv_status,"处理中");
                 break;
             case "3":
-                helper.setImageResource(R.id.image_status,R.mipmap.icon_repairs_complated);
-                helper.setText(R.id.tv_status,"已撤回");
+                helper.setImageResource(R.id.image_status,R.mipmap.icon_repairs_ing);
+                helper.setText(R.id.tv_status,"处理完成");
                 break;
             case "4":
                 helper.setImageResource(R.id.image_status,R.mipmap.icon_repairs_complated);
-                helper.setText(R.id.tv_status,"待评价");
+                helper.setText(R.id.tv_status,"回访完成");
                 break;
             case "5":
                 helper.setImageResource(R.id.image_status,R.mipmap.icon_repairs_complated);
-                helper.setText(R.id.tv_status,"已完成");
+                helper.setText(R.id.tv_status,"已评价");
                 break;
         }
 

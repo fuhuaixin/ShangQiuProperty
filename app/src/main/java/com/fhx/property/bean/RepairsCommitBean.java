@@ -190,6 +190,15 @@ public class RepairsCommitBean extends BaseBean {
             private Object customerName;
             private String content;
             private String status;
+            private String imgs;
+
+            public String getImgs() {
+                return imgs;
+            }
+
+            public void setImgs(String imgs) {
+                this.imgs = imgs;
+            }
 
             public String getRepairId() {
                 return repairId;

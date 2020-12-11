@@ -119,7 +119,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <View
                     android:layout_width="match_parent"
@@ -266,6 +266,7 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/tv_repair_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -298,6 +299,7 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/tv_repair_phone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -331,10 +333,11 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/tv_reserve_time"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="124546545646564645664564564645646456456456"
+                    android:text="124546545646564646"
                     android:textColor="@color/tvaaa"
                     android:textSize="12sp" />
             </RelativeLayout>
@@ -379,7 +382,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="XXX"
+                        android:text=""
                         android:textColor="@color/tvaaa"
                         android:textSize="12sp" />
                 </RelativeLayout>
@@ -411,7 +414,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="XXXxxx"
+                        android:text=""
                         android:textColor="@color/tvaaa"
                         android:textSize="12sp" />
                 </RelativeLayout>

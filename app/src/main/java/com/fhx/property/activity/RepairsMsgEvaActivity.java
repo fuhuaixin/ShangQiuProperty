@@ -29,7 +29,7 @@ public class RepairsMsgEvaActivity extends BaseActivity implements View.OnClickL
     private TextView tvTitle;
     private RatingBar ratingBar;
     private EditText edit_eva;
-    private RepairsCommitBean.DataBean.RecordsBean repairsCommitBean;
+    private String repairId;
 
     @Override
     protected int initLayout() {
@@ -48,8 +48,8 @@ public class RepairsMsgEvaActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void initData() {
         tvTitle.setText("评价");
-        repairsCommitBean = (RepairsCommitBean.DataBean.RecordsBean) getIntent().getSerializableExtra("bean");
-        Log.e("fhxx",repairsCommitBean.getRepairId());
+        repairId = getIntent().getStringExtra("jumpOne");
+        Log.e("fhxx",repairId);
         imageRight.setVisibility(View.VISIBLE);
         imageLeft.setImageResource(R.mipmap.icon_back_all_x);
     }
@@ -64,12 +64,10 @@ public class RepairsMsgEvaActivity extends BaseActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.image_left:
-                mmkv.encode("eva",false);
                 finish();
                 overridePendingTransition(R.anim.activity_out_from_animation, R.anim.activity_out_to_animation);
                 break;
             case R.id.image_right:
-//                ToastShort("提交并执行退出动画");
                 commit();
                 break;
         }
@@ -79,7 +77,7 @@ public class RepairsMsgEvaActivity extends BaseActivity implements View.OnClickL
         EasyHttp.post(AppUrl.EvaluteSubmit)
                 .syncRequest(false)
                 .params("originType","0")
-                .params("originId",repairsCommitBean.getRepairId().toString())
+                .params("originId",repairId)
                 .params("rateScore",ratingBar.getNumStars()+"")
                 .params("customerId",mmkv.decodeString("userId"))
                 .params("content",edit_eva.getText().toString())
@@ -93,7 +91,6 @@ public class RepairsMsgEvaActivity extends BaseActivity implements View.OnClickL
                     public void onSuccess(String s) {
                         SuccessBean successBean = JSON.parseObject(s, SuccessBean.class);
                         if (successBean.isSuccess()){
-                            mmkv.encode("eva",true);
                             ToastShort("提交成功");
                             finish();
                             overridePendingTransition(R.anim.activity_out_from_animation, R.anim.activity_out_to_animation);

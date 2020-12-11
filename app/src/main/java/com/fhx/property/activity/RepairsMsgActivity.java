@@ -17,6 +17,7 @@ import com.fhx.property.base.AppUrl;
 import com.fhx.property.base.BaseActivity;
 import com.fhx.property.bean.EvaMsgBean;
 import com.fhx.property.bean.RepairsCommitBean;
+import com.fhx.property.bean.RepairsMSgBean;
 import com.fhx.property.bean.SuccessBean;
 import com.fhx.property.utils.CutToUtils;
 import com.zhouyou.http.EasyHttp;
@@ -37,7 +38,7 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
     private TextView tv_ing;
     private TextView tv_finish;
     private TextView tv_msg;
-    private TextView tv_evaluate;
+    private TextView tv_evaluate,tv_repair_name,tv_repair_phone,tv_reserve_time;
     private ImageView image_ing;
     private ImageView image_finish;
     private View view_ing;
@@ -53,8 +54,8 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
 
     private RepairsMsgImageAdapter imageAdapter;
     private List<String> imageList = new ArrayList<>();
-    private RepairsCommitBean.DataBean.RecordsBean repairsCommitBean;
-
+    private String repairId;
+    private RepairsMSgBean.DataBean data;
     @Override
     protected int initLayout() {
         return R.layout.activity_repairs_msg;
@@ -65,6 +66,9 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
         tvTitle = (TextView) findViewById(R.id.tv_title);
         tv_ing = (TextView) findViewById(R.id.tv_ing);
         tv_msg = (TextView) findViewById(R.id.tv_msg);
+        tv_repair_name = (TextView) findViewById(R.id.tv_repair_name);
+        tv_repair_phone = (TextView) findViewById(R.id.tv_repair_phone);
+        tv_reserve_time = (TextView) findViewById(R.id.tv_reserve_time);
         tv_evaluate = (TextView) findViewById(R.id.tv_evaluate);
         tv_finish = (TextView) findViewById(R.id.tv_finish);
         imageLeft = (ImageView) findViewById(R.id.image_left);
@@ -84,25 +88,15 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onResume() {
         super.onResume();
-        repairsCommitBean = (RepairsCommitBean.DataBean.RecordsBean) getIntent().getSerializableExtra("bean");
-        Log.e("fhxx", repairsCommitBean.getContent() + repairsCommitBean.getStatus());
+        repairId = getIntent().getStringExtra("jumpOne");
 
-        if (mmkv.decodeBool("eva")) {
-            ToastShort("true");
-            Status("5");
-        } else {
-            Status(repairsCommitBean.getStatus());
-//            ToastShort("false");
-        }
 
-        tv_msg.setText(repairsCommitBean.getContent());
-        imageList.add("https://iknow-pic.cdn.bcebos.com/fcfaaf51f3deb48f12d46640f21f3a292cf578eb?x-bce-process=image/resize,m_lfit,w_600,h_800,limit_1");
-        imageList.add("https://iknow-pic.cdn.bcebos.com/7af40ad162d9f2d3659ee371abec8a136227cca5?x-bce-process=image/resize,m_lfit,w_600,h_800,limit_1");
-        imageList.add("https://iknow-pic.cdn.bcebos.com/7af40ad162d9f2d3659ee371abec8a136227cca5?x-bce-process=image/resize,m_lfit,w_600,h_800,limit_1");
         imageAdapter = new RepairsMsgImageAdapter(imageList);
         recycle_image.setLayoutManager(new GridLayoutManager(this, 3));
         recycle_image.setAdapter(imageAdapter);
-        imageAdapter.notifyDataSetChanged();
+
+        getDetails();
+
     }
 
     @Override
@@ -129,14 +123,14 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
             case R.id.ll_no_evaluate:
                 break;
             case R.id.tv_evaluate:
-                if (repairsCommitBean.getCustomerId() != null && repairsCommitBean.getCustomerId().equals(mmkv.decodeString("userId"))) {
-                    CutToUtils.getInstance().JumpToBean(RepairsMsgActivity.this, RepairsMsgEvaActivity.class, repairsCommitBean);
+                if (data.getSelf().getCustomerId() != null && data.getSelf().getCustomerId().equals(mmkv.decodeString("userId"))) {
+                    CutToUtils.getInstance().JumpToOne(RepairsMsgActivity.this, RepairsMsgEvaActivity.class, data.getSelf().getRepairId());
                 } else {
                     ToastShort("只可评价自己发起的报修");
                 }
                 break;
             case R.id.ll_revocation: //撤回
-                cancle(repairsCommitBean.getRepairId());
+                cancle(data.getSelf().getRepairId());
                 break;
         }
     }
@@ -148,8 +142,8 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
      */
     private void Status(String i) {
         switch (i) {
-            case "0":
-                if (repairsCommitBean.getCustomerId().equals(mmkv.decodeString("userId"))) {
+            case "1":
+                if (data.getSelf().getCustomerId().equals(mmkv.decodeString("userId"))) {
                     ll_revocation.setVisibility(View.VISIBLE);
                 }
                 tv_ing.setTextColor(getResources().getColor(R.color.tvaaa));
@@ -160,7 +154,8 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
                 view_finish.setBackgroundResource(R.color.tvaaa);
                 ll_evaluate.setVisibility(View.GONE);
                 break;
-            case "1":
+            case "2":
+            case "3":
                 tv_ing.setTextColor(getResources().getColor(R.color.col_repairs_blue));
                 tv_finish.setTextColor(getResources().getColor(R.color.tvaaa));
                 image_ing.setImageResource(R.mipmap.icon_repairs_msg_ing_sel);
@@ -170,7 +165,7 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
                 ll_evaluate.setVisibility(View.GONE);
                 ll_repairs_man.setVisibility(View.VISIBLE);
                 break;
-            case "3":
+            case "0":
                 tv_ing.setTextColor(getResources().getColor(R.color.col_repairs_blue));
                 tv_finish.setTextColor(getResources().getColor(R.color.col_repairs_blue));
                 tv_finish.setText("已撤回");
@@ -182,7 +177,6 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
             case "4":
                 ll_no_evaluate.setVisibility(View.VISIBLE);
                 ll_repairs_man.setVisibility(View.VISIBLE);
-
                 tv_ing.setTextColor(getResources().getColor(R.color.col_repairs_blue));
                 tv_finish.setTextColor(getResources().getColor(R.color.col_repairs_blue));
                 image_ing.setImageResource(R.mipmap.icon_repairs_msg_ing_sel);
@@ -193,15 +187,57 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
             case "5":
                 ll_evaluate.setVisibility(View.VISIBLE);
                 ll_repairs_man.setVisibility(View.VISIBLE);
+                ll_no_evaluate.setVisibility(View.GONE);
                 tv_ing.setTextColor(getResources().getColor(R.color.col_repairs_blue));
                 tv_finish.setTextColor(getResources().getColor(R.color.col_repairs_blue));
                 image_ing.setImageResource(R.mipmap.icon_repairs_msg_ing_sel);
                 image_finish.setImageResource(R.mipmap.icon_repairs_finish_sel);
                 view_ing.setBackgroundResource(R.color.col_repairs_blue);
                 view_finish.setBackgroundResource(R.color.col_repairs_blue);
-                getEvaMsg(repairsCommitBean.getRepairId());
+                getEvaMsg(data.getSelf().getRepairId());
                 break;
         }
+    }
+
+    /**
+     * 根据id查询详情
+     */
+
+
+    private void getDetails(){
+        EasyHttp.get(AppUrl.RepairDetail)
+                .params("id",repairId)
+                .execute(new SimpleCallBack<String>() {
+
+                    @Override
+                    public void onError(ApiException e) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(String s) {
+                        RepairsMSgBean repairsMSgBean = JSON.parseObject(s, RepairsMSgBean.class);
+                        if (repairsMSgBean.isSuccess()){
+                            data = repairsMSgBean.getData();
+                            Status(data.getSelf().getStatus());
+                            tv_msg.setText(data.getSelf().getContent());
+                            tv_repair_name.setText(data.getSelf().getCustomerName());
+                            tv_repair_phone.setText(data.getSelf().getCustomerPhone());
+                            tv_reserve_time.setText(data.getSelf().getReserveTime());
+                            String imgs = data.getSelf().getImgs();
+                            if (imgs!=null&&!imgs.equals("")){
+                                String[] split = imgs.split(",");
+                                for (int i = 0; i < split.length; i++) {
+                                    imageList.add(split[i]);
+                                }
+                            }
+                            imageAdapter.notifyDataSetChanged();
+
+                        }else {
+
+                        }
+                    }
+                });
     }
 
     /**
@@ -248,6 +284,9 @@ public class RepairsMsgActivity extends BaseActivity implements View.OnClickList
                     public void onSuccess(String s) {
                         EvaMsgBean evaMsgBean = JSON.parseObject(s, EvaMsgBean.class);
                         if (evaMsgBean.isSuccess()) {
+                            if (evaMsgBean.getData()==null){
+                                return;
+                            }
                             ratingBar_finish.setRating(evaMsgBean.getData().getRateScore());
                             tv_eva_finish.setText(evaMsgBean.getData().getContent());
                         }

@@ -22,11 +22,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alibaba.fastjson.JSON;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.fhx.property.R;
-import com.fhx.property.adapter.ChooseImgAdapter;
+import com.fhx.property.adapter.ImageChooseAdapter;
 import com.fhx.property.base.AppUrl;
 import com.fhx.property.base.BaseActivity;
 import com.fhx.property.bean.RepairTypeListBean;
+import com.fhx.property.bean.RepairsMSgBean;
 import com.fhx.property.bean.SuccessBean;
+import com.fhx.property.bean.UpLoadImageBean;
 import com.fhx.property.utils.ListDialog;
 import com.scrat.app.selectorlibrary.ImageSelector;
 import com.zhouyou.http.EasyHttp;
@@ -34,13 +36,13 @@ import com.zhouyou.http.body.UIProgressResponseCallBack;
 import com.zhouyou.http.callback.SimpleCallBack;
 import com.zhouyou.http.exception.ApiException;
 
-import org.json.JSONObject;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
+
+import top.zibin.luban.Luban;
+import top.zibin.luban.OnCompressListener;
 
 
 /**
@@ -51,18 +53,21 @@ public class RepairsCommitActivity extends BaseActivity implements View.OnClickL
 
     private ImageView imageLeft;
     private ImageView imageRight;
-    private ImageView image_add;
     private TextView tvTitle;
-    private TextView tv_type, tv_choose_time;
+    private TextView tv_repair_type, tv_choose_time;
     private LinearLayout ll_choose_type, ll_choose_time;
     private RecyclerView recycle_image;
     private EditText et_content, et_name, et_number, et_floor;
-    private ListDialog listDialog;
-    private List<String> mChooseList = new ArrayList<>();
-    private List<String> mChooseImageList = new ArrayList<>();
-    private ChooseImgAdapter chooseImgAdapter;
-    private List<String> imageList = new ArrayList<>();
 
+    private ListDialog listDialog;//选择类型dialog
+    private ListDialog chooseDialog; //选择图片dialog
+    private List<String> mChooseList = new ArrayList<>();
+    private List<String> mChooseIdList = new ArrayList<>(); //类型id  List
+    private String chooseId; //选择的类型id
+    private List<String> mChooseImageList = new ArrayList<>();
+    private ImageChooseAdapter chooseImgAdapter;
+    private List<String> imageList = new ArrayList<>(); //选择上传图片列表
+    private List<String> UpImageList = new ArrayList<>(); //压缩上传图片列表
     private List<RepairTypeListBean.DataBean.RecordsBean> records; //报修类型list
 
     private static final int REQUEST_CODE_SELECT_IMG = 1;
@@ -70,6 +75,7 @@ public class RepairsCommitActivity extends BaseActivity implements View.OnClickL
     private static final int MAX_SELECT_COUNT = 3;
 
     private Calendar c;//获取当前时间
+    private String jumpOne = null;
 
     @Override
     protected int initLayout() {
@@ -80,9 +86,8 @@ public class RepairsCommitActivity extends BaseActivity implements View.OnClickL
     protected void initView() {
         imageLeft = (ImageView) findViewById(R.id.image_left);
         imageRight = (ImageView) findViewById(R.id.image_right);
-        image_add = (ImageView) findViewById(R.id.image_add);
         tvTitle = (TextView) findViewById(R.id.tv_title);
-        tv_type = (TextView) findViewById(R.id.tv_type);
+        tv_repair_type = (TextView) findViewById(R.id.tv_repair_type);
         tv_choose_time = (TextView) findViewById(R.id.tv_choose_time);
         ll_choose_type = (LinearLayout) findViewById(R.id.ll_choose_type);
         ll_choose_time = (LinearLayout) findViewById(R.id.ll_choose_time);
@@ -96,38 +101,61 @@ public class RepairsCommitActivity extends BaseActivity implements View.OnClickL
 
     @Override
     protected void initData() {
-
+        jumpOne = getIntent().getStringExtra("jumpOne");
         c = Calendar.getInstance();
         c.setTimeInMillis(System.currentTimeMillis());
         imageLeft.setImageResource(R.mipmap.icon_back_all_x);
         imageRight.setVisibility(View.VISIBLE);
         tvTitle.setText("我要报修");
-
-        chooseImgAdapter = new ChooseImgAdapter(imageList);
-        chooseSize();
-        recycle_image.setAdapter(chooseImgAdapter);
-
         getRepairType();
 
+
+        recycle_image.setLayoutManager(new GridLayoutManager(this, 3));
+        chooseImgAdapter = new ImageChooseAdapter(this, imageList);
+        recycle_image.setAdapter(chooseImgAdapter);
+
+
+        mChooseImageList.add("相机");
+        mChooseImageList.add("选择图片");
+        chooseDialog = new ListDialog(RepairsCommitActivity.this, mChooseImageList, new ListDialog.LeaveMyDialogListener() {
+            @Override
+            public void onClick(BaseQuickAdapter adapter, View view, int position) {
+                switch (position) {
+                    case 0:
+                        useCamera();
+                        break;
+                    case 1:
+                        ImageSelector.show(RepairsCommitActivity.this, REQUEST_CODE_SELECT_IMG, MAX_SELECT_COUNT - imageList.size());
+
+                        break;
+                }
+                chooseDialog.dismiss();
+            }
+        });
+
+        getMsg();
     }
+
 
     @Override
     protected void initListen() {
         imageLeft.setOnClickListener(this);
         imageRight.setOnClickListener(this);
-        image_add.setOnClickListener(this);
+
         ll_choose_type.setOnClickListener(this);
         ll_choose_time.setOnClickListener(this);
 
-        chooseImgAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+        chooseImgAdapter.setClickListener(new ImageChooseAdapter.OnItemClickListener() {
             @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                switch (view.getId()) {
-                    case R.id.image_del:
-                        imageList.remove(position);
-                        chooseSize();
-                        break;
-                }
+            public void onAdd(View view, int position) {
+                chooseDialog.show();
+            }
+
+            @Override
+            public void onDel(View view, int position) {
+                imageList.remove(position);
+                UpImageList.remove(position);
+                chooseSize();
             }
         });
     }
@@ -145,33 +173,14 @@ public class RepairsCommitActivity extends BaseActivity implements View.OnClickL
                 overridePendingTransition(R.anim.activity_out_from_animation, R.anim.activity_out_to_animation);
 
                 break;
-            case R.id.image_add:
-                mChooseImageList.clear();
-                mChooseImageList.add("相机");
-                mChooseImageList.add("选择图片");
-                listDialog = new ListDialog(RepairsCommitActivity.this, mChooseImageList, new ListDialog.LeaveMyDialogListener() {
-                    @Override
-                    public void onClick(BaseQuickAdapter adapter, View view, int position) {
-                        switch (position) {
-                            case 0:
-                                useCamera();
-                                break;
-                            case 1:
-                                ImageSelector.show(RepairsCommitActivity.this, REQUEST_CODE_SELECT_IMG, MAX_SELECT_COUNT - imageList.size());
 
-                                break;
-                        }
-                        listDialog.dismiss();
-                    }
-                });
-                listDialog.show();
-                break;
             case R.id.ll_choose_type:
 
                 listDialog = new ListDialog(RepairsCommitActivity.this, mChooseList, new ListDialog.LeaveMyDialogListener() {
                     @Override
                     public void onClick(BaseQuickAdapter adapter, View view, int position) {
-                        tv_type.setText(mChooseList.get(position));
+                        tv_repair_type.setText(mChooseList.get(position));
+                        chooseId = mChooseIdList.get(position);
 //                        ToastShort(records.get(position).getRepairTypeId());
                         listDialog.dismiss();
                     }
@@ -186,8 +195,19 @@ public class RepairsCommitActivity extends BaseActivity implements View.OnClickL
                 new DatePickerDialog(RepairsCommitActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-//                        ToastShort(year+"--"+month+"--"+dayOfMonth);
-                        tv_choose_time.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
+                        String mMonth = null;
+                        String day = null;
+                        if (month < 9) {
+                            mMonth = "0" + (month + 1);
+                        } else {
+                            mMonth = String.valueOf((month + 1));
+                        }
+                        if (dayOfMonth < 10) {
+                            day = "0" + dayOfMonth;
+                        } else {
+                            day = String.valueOf(dayOfMonth);
+                        }
+                        tv_choose_time.setText(year + "-" + mMonth + "-" + day);
                     }
                 }, year, mouth, day).show();
                 break;
@@ -202,9 +222,10 @@ public class RepairsCommitActivity extends BaseActivity implements View.OnClickL
             Log.e("TAG", "拍照---------" + FileProvider.getUriForFile(this, "com.fhx.property.provider", file));
             Log.e("TAG", "拍照---------" + file);
 //            imageView.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
-            imageList.add(file.getAbsolutePath());
+          /*  imageList.add(file.getAbsolutePath());
             chooseSize();
-            upImage(file);
+            upImage(file);*/
+            Luban(file);
             //在手机相册中显示刚拍摄的图片
             Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             Uri contentUri = Uri.fromFile(file);
@@ -219,14 +240,7 @@ public class RepairsCommitActivity extends BaseActivity implements View.OnClickL
     }
 
     private void chooseSize() {
-        if (imageList.size() < 3) {
-            image_add.setVisibility(View.VISIBLE);
-        } else {
-            image_add.setVisibility(View.GONE);
-        }
-        if (imageList.size() > 0) {
-            recycle_image.setLayoutManager(new GridLayoutManager(RepairsCommitActivity.this, imageList.size()));
-        }
+
         chooseImgAdapter.notifyDataSetChanged();
     }
 
@@ -257,19 +271,17 @@ public class RepairsCommitActivity extends BaseActivity implements View.OnClickL
      */
     private void showContent(Intent data) {
         List<String> paths = ImageSelector.getImagePaths(data);
-        File file = new File(paths.get(0));
-        Log.e("fhxx", "选择图片" + file);
-        upImage(file);
+
         if (paths.isEmpty()) {
             for (int i = 0; i < paths.size(); i++) {
                 imageList.add(paths.get(i));
             }
-//            tv_mes.setText(paths.toString());
             return;
         }
 
         for (int i = 0; i < paths.size(); i++) {
-            imageList.add(paths.get(i));
+            File file = new File(paths.get(i));
+            Luban(file);
         }
     }
 
@@ -294,10 +306,52 @@ public class RepairsCommitActivity extends BaseActivity implements View.OnClickL
                             records = repairTypeListBean.getData().getRecords();
                             for (int i = 0; i < records.size(); i++) {
                                 mChooseList.add(records.get(i).getRepairTypeName());
+                                mChooseIdList.add(records.get(i).getRepairTypeId());
                             }
                         }
                     }
                 });
+    }
+
+    private void getMsg() {
+        if (jumpOne != null && !jumpOne.equals("")) {
+            EasyHttp.get(AppUrl.RepairDetail)
+                    .params("id", jumpOne)
+                    .execute(new SimpleCallBack<String>() {
+
+                        @Override
+                        public void onError(ApiException e) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(String s) {
+                            RepairsMSgBean repairsMSgBean = JSON.parseObject(s, RepairsMSgBean.class);
+                            if (repairsMSgBean.isSuccess()) {
+                                RepairsMSgBean.DataBean.SelfBean self = repairsMSgBean.getData().getSelf();
+                                et_content.setText(self.getContent());
+                                tv_repair_type.setText(self.getRepairTypeName());
+                                et_floor.setText(self.getNotes());
+                                tv_choose_time.setText(self.getReserveTime());
+                                et_name.setText(self.getCustomerName());
+                                et_number.setText(self.getCustomerPhone());
+                                chooseId = self.getRepairTypeId();
+                                String imgs = self.getImgs();
+                                if (imgs != null && !imgs.equals("")) {
+                                    String[] split = imgs.split(",");
+                                    for (int i = 0; i < split.length; i++) {
+                                        imageList.add(split[i]);
+                                        UpImageList.add(split[i]);
+                                    }
+                                }
+                                chooseImgAdapter.notifyDataSetChanged();
+
+                            } else {
+
+                            }
+                        }
+                    });
+        }
     }
 
     /**
@@ -305,30 +359,46 @@ public class RepairsCommitActivity extends BaseActivity implements View.OnClickL
      */
 
     private void commitRepair() {
+        String images = "";
+        if (UpImageList.size() > 0) {
+            for (int i = 0; i < UpImageList.size(); i++) {
+                switch (i) {
+                    case 0:
+                        images = UpImageList.get(0);
+                        break;
+                    case 1:
+                        images = UpImageList.get(0) + "," + UpImageList.get(1);
+                        break;
+                    case 2:
+                        images = UpImageList.get(0) + "," + UpImageList.get(1) + "," + UpImageList.get(2);
 
-        if (!TextUtils.isEmpty(et_content.getText().toString()) && !TextUtils.isEmpty(tv_type.getText().toString()) && !tv_type.getText().toString().equals("请选择")
+                        break;
+                }
+            }
+        }
+
+        if (!TextUtils.isEmpty(et_content.getText().toString()) && !TextUtils.isEmpty(tv_repair_type.getText().toString()) && !tv_repair_type.getText().toString().equals("请选择")
                 && !TextUtils.isEmpty(et_floor.getText().toString()) && !et_floor.getText().toString().equals("请填写")
                 && !TextUtils.isEmpty(tv_choose_time.getText().toString()) && !tv_choose_time.getText().toString().equals("请选择")) {
-           /* HashMap<String, String> params = new HashMap<>();
-            params.put("content", et_content.getText().toString());
-            params.put("reserveTime", tv_choose_time.getText().toString());//预约时间
-            params.put("customerName", et_name.getText().toString());
-            params.put("customerPhone", et_number.getText().toString());
-            params.put("repairTypeName", tv_type.getText().toString());//维修类型
-            params.put("notes", et_floor.getText().toString());//报修地址
-            params.put("customerId", mmkv.decodeString("userId"));//提交用户id
-            JSONObject jsonObject = new JSONObject(params);*/
-            EasyHttp.post(AppUrl.RepairAdd)
+            String url;
+            if (jumpOne != null && !jumpOne.equals("")) {
+                url = AppUrl.RepairReSubmit;
+            } else {
+                url = AppUrl.RepairAdd;
+            }
+            EasyHttp.post(url)
                     .syncRequest(false)
 //                    .upJson(jsonObject.toString())
                     .params("content", et_content.getText().toString())
                     .params("reserveTime", tv_choose_time.getText().toString())
                     .params("customerName", et_name.getText().toString())
                     .params("customerPhone", et_number.getText().toString())
-                    .params("repairTypeName", tv_type.getText().toString())
+                    .params("repairTypeName", tv_repair_type.getText().toString())
+                    .params("repairTypeId", chooseId)
                     .params("notes", et_floor.getText().toString())
                     .params("customerId", mmkv.decodeString("userId"))
                     .params("originType", "0")
+                    .params("imgs", images)
                     .execute(new SimpleCallBack<String>() {
                         @Override
                         public void onError(ApiException e) {
@@ -380,10 +450,44 @@ public class RepairsCommitActivity extends BaseActivity implements View.OnClickL
 
                     @Override
                     public void onSuccess(String s) {
-                        SuccessBean successBean = JSON.parseObject(s, SuccessBean.class);
-
+                        UpLoadImageBean bean = JSON.parseObject(s, UpLoadImageBean.class);
+                        if (bean.isSuccess()) {
+                            UpImageList.add(bean.getData().getUrl());
+                        }
                     }
                 });
     }
 
+
+    /**
+     * 鲁班图片压缩
+     *
+     * @param file
+     */
+    private void Luban(File file) {
+        Luban.with(RepairsCommitActivity.this)
+                .load(file)
+                .ignoreBy(100)
+                .setCompressListener(new OnCompressListener() {
+                    @Override
+                    public void onStart() {
+                        Log.e("luban", "onStart");
+                    }
+
+                    @Override
+                    public void onSuccess(File file) {
+                        Log.e("luban", file.getAbsolutePath());
+                        upImage(file);
+                        imageList.add(file.getAbsolutePath());
+                        chooseSize();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("luban", e.getMessage());
+
+                    }
+                })
+                .launch();
+    }
 }

@@ -21,6 +21,7 @@ import com.lljjcoder.citywheel.CityConfig;
 import com.lljjcoder.style.citypickerview.CityPickerView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -32,9 +33,11 @@ public class ChangeDetailsActivity extends BaseActivity implements View.OnClickL
     private TextView tvTitle;
     private LinearLayout ll_birthday, ll_sex, ll_phone, ll_area, ll_header;
     private TextView tv_birthday, tv_sex, tv_phone, tv_area;
+
     private ListDialog listDialog;
     private CityPickerView cityPickerView;
     private CityConfig config;
+    private Calendar c;//获取当前时间
 
     @Override
     protected int initLayout() {
@@ -57,6 +60,9 @@ public class ChangeDetailsActivity extends BaseActivity implements View.OnClickL
 
     @Override
     protected void initData() {
+        c = Calendar.getInstance();
+        c.setTimeInMillis(System.currentTimeMillis());
+
         tvTitle.setText("个人信息");
         cityPickerView = new CityPickerView();
         cityPickerView.init(this);
@@ -94,13 +100,28 @@ public class ChangeDetailsActivity extends BaseActivity implements View.OnClickL
                 overridePendingTransition(R.anim.activity_out_from_animation, R.anim.activity_out_to_animation);
                 break;
             case R.id.ll_birthday:
+                int year = c.get(Calendar.YEAR);
+                int mouth = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
                 //修改颜色使用 R.style.MyDatePickerDialogTheme
                 DatePickerDialog datePickerDialog = new DatePickerDialog(ChangeDetailsActivity.this, DatePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        tv_birthday.setText(year + "-" + month + "-" + dayOfMonth);
+                        String mMonth = null;
+                        String day = null;
+                        if (month < 9) {
+                            mMonth = "0" + (month + 1);
+                        } else {
+                            mMonth = String.valueOf((month + 1));
+                        }
+                        if (dayOfMonth < 10) {
+                            day = "0" + dayOfMonth;
+                        } else {
+                            day = String.valueOf(dayOfMonth);
+                        }
+                        tv_birthday.setText(year + "-" + mMonth + "-" + day);
                     }
-                }, 2020, 8, 26);
+                }, year, mouth, day);
                 datePickerDialog.show();
                 break;
             case R.id.ll_sex:
@@ -129,12 +150,12 @@ public class ChangeDetailsActivity extends BaseActivity implements View.OnClickL
     }
 
 
-    private void setSex( final int i) {
+    private void setSex(final int i) {
         final List<String> mList = new ArrayList<>();
-        if (i==1){
+        if (i == 1) {
             mList.add("相机");
             mList.add("选择照片");
-        }else if (i==2){
+        } else if (i == 2) {
             mList.add("男");
             mList.add("女");
             mList.add("保密");
@@ -142,9 +163,9 @@ public class ChangeDetailsActivity extends BaseActivity implements View.OnClickL
         listDialog = new ListDialog(ChangeDetailsActivity.this, mList, new ListDialog.LeaveMyDialogListener() {
             @Override
             public void onClick(BaseQuickAdapter adapter, View view, int position) {
-                if (i==1){
+                if (i == 1) {
                     ToastShort(mList.get(position));
-                }else if (i==2){
+                } else if (i == 2) {
                     tv_sex.setText(mList.get(position));
                 }
                 listDialog.dismiss();

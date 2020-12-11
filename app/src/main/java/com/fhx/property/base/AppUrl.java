@@ -24,8 +24,12 @@ public class AppUrl {
     public static final String RepairTypeList = BASEURL + "repairType/list";
     //添加报修信息
     public static final String RepairAdd = BASEURL + "repair/add";
+    //撤回重新提交报修信息
+    public static final String RepairReSubmit = BASEURL + "repair/reSubmit";
     //报修列表查询接口
     public static final String RepairList = BASEURL + "repair/list";
+    //根据id获得报修及工单处理详情
+    public static final String RepairDetail = BASEURL + "repair/detail";
     //删除报修信息
     public static final String RepairDel = BASEURL + "repair/del";
     //撤回报修信息
