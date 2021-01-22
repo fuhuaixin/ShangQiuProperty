@@ -100,7 +100,6 @@ public abstract class BaseActivity extends SwipeBackActivity {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
-
     /**
      * 弹出窗
      */

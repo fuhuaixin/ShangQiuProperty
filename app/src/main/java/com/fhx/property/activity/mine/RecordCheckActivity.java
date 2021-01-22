@@ -20,7 +20,7 @@ import com.fhx.property.bean.AbnormalBean;
 import com.fhx.property.bean.AttendRecordStatBean;
 import com.fhx.property.bean.ChooseBean;
 import com.fhx.property.utils.CutToUtils;
-import com.fhx.property.utils.TitleDialog;
+import com.fhx.property.dialog.TitleDialog;
 import com.fhx.property.utils.WeekUtils;
 import com.zhouyou.http.EasyHttp;
 import com.zhouyou.http.callback.SimpleCallBack;

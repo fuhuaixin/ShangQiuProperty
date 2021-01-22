@@ -1,6 +1,5 @@
 package com.fhx.property.fragment;
 
-import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -30,20 +29,14 @@ import com.fhx.property.base.AppUrl;
 import com.fhx.property.base.BaseFragment;
 import com.fhx.property.bean.MineOABean;
 import com.fhx.property.bean.SuccessBean2;
-import com.fhx.property.utils.CommonDialog;
+import com.fhx.property.dialog.CommonDialog;
 import com.fhx.property.utils.CutToUtils;
-import com.tencent.mmkv.MMKV;
 import com.zhouyou.http.EasyHttp;
 import com.zhouyou.http.callback.SimpleCallBack;
-import com.zhouyou.http.cookie.CookieManger;
-import com.zhouyou.http.cookie.PersistentCookieStore;
 import com.zhouyou.http.exception.ApiException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
-
-import okhttp3.Cookie;
 
 /**
  * 我的fragment
@@ -184,11 +177,13 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         }).show();
     }
 
+    /**
+     * 退出
+     */
     private void LogOut(){
         EasyHttp.get(AppUrl.Logout)
                 .syncRequest(false)
-//                .headers("Admin-Token",mmkv.decodeString("token"))
-                .accessToken(true)
+                .headers("Admin-Token",mmkv.decodeString("token"))
                 .execute(new SimpleCallBack<String>() {
                     @Override
                     public void onError(ApiException e) {

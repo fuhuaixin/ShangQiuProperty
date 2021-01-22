@@ -14,6 +14,7 @@ import com.fhx.property.MainActivity;
 import com.fhx.property.R;
 import com.fhx.property.base.AppUrl;
 import com.fhx.property.base.BaseActivity;
+import com.fhx.property.base.BaseApplication;
 import com.fhx.property.bean.LoginBean;
 import com.fhx.property.utils.CutToUtils;
 import com.lljjcoder.style.citylist.Toast.ToastUtils;
@@ -54,7 +55,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     protected void initData() {
-        mmkv= MMKV.defaultMMKV();
+        mmkv = MMKV.defaultMMKV();
 //        mmkv.encode("存在","存进去的村长");
 //        ToastUtils.showLongToast(this,mmkv.decodeString("存在"));
     }
@@ -100,12 +101,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
             @Override
             public void afterTextChanged(Editable s) {
-               if (s.length()>0){
-                   image_user_del.setVisibility(View.VISIBLE);
-               }else {
-                   image_user_del.setVisibility(View.GONE);
+                if (s.length() > 0) {
+                    image_user_del.setVisibility(View.VISIBLE);
+                } else {
+                    image_user_del.setVisibility(View.GONE);
 
-               }
+                }
             }
         });
         edit_password.addTextChangedListener(new TextWatcher() {
@@ -121,9 +122,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length()>0){
+                if (s.length() > 0) {
                     image_password_del.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     image_password_del.setVisibility(View.GONE);
                 }
             }
@@ -134,12 +135,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.image_login:
-                if (edit_user.getText().toString().equals("")){
+                if (edit_user.getText().toString().equals("")) {
                     ToastShort("请填写账号");
-                }else if (edit_password.getText().toString().equals("")){
+                } else if (edit_password.getText().toString().equals("")) {
                     ToastShort("请填写密码");
-                }else {
-                    toLogin(edit_user.getText().toString(),edit_password.getText().toString());
+                } else {
+                    toLogin(edit_user.getText().toString(), edit_password.getText().toString());
                 }
                 break;
             case R.id.image_user_del:
@@ -151,32 +152,33 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
     }
 
-    private void toLogin(String user,String password){
+    private void toLogin(String user, String password) {
         EasyHttp.post(AppUrl.Login)
                 .syncRequest(false)
-                .params("userName",user)
-                .params("password",password)
+                .params("userName", user)
+                .params("password", password)
                 .execute(new SimpleCallBack<String>() {
                     @Override
                     public void onError(ApiException e) {
-                        Log.e("error",e.getMessage());
+                        Log.e("error", e.getMessage());
                     }
 
                     @Override
                     public void onSuccess(String s) {
                         LoginBean loginBean = JSON.parseObject(s, LoginBean.class);
-                        if (loginBean.isSuccess()){
-                            mmkv.encode("userName",edit_user.getText().toString());
-                            mmkv.encode("passWord",edit_password.getText().toString());
+                        if (loginBean.isSuccess()) {
+                            mmkv.encode("userName", edit_user.getText().toString());
+                            mmkv.encode("passWord", edit_password.getText().toString());
+
+                            mmkv.encode("token", loginBean.getData().getToken());
+                            mmkv.encode("userId", loginBean.getData().getUser().getUserId());
+                            mmkv.encode("originId", loginBean.getData().getUser().getOriginId());
+
                             finish();
                             CutToUtils.getInstance().JumpTo(LoginActivity.this, MainActivity.class);
-                            //存
-                            mmkv.encode("token",loginBean.getData().getToken());
-                            mmkv.encode("userId",loginBean.getData().getUser().getUserId());
-                            mmkv.encode("originId",loginBean.getData().getUser().getOriginId());
-                            Log.e("fhxx","取token"+mmkv.decodeString("token"));
-                        }else {
-                            ToastUtils.showShortToast(LoginActivity.this,loginBean.getMsg());
+
+                        } else {
+                            ToastUtils.showShortToast(LoginActivity.this, loginBean.getMsg());
                         }
                     }
                 });

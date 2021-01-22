@@ -1,6 +1,6 @@
 package com.fhx.property.activity.mine;
 
-import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,24 +18,25 @@ import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.fhx.property.R;
-import com.fhx.property.adapter.AbnormalAdapter;
+import com.fhx.property.adapter.RulesGroupAdapter;
 import com.fhx.property.base.AppUrl;
 import com.fhx.property.base.BaseActivity;
-import com.fhx.property.bean.AbnormalBean;
+import com.fhx.property.bean.AttendRulesDeptBean;
+import com.fhx.property.bean.RulesGroupBean;
 import com.fhx.property.bean.SuccessBean;
 import com.fhx.property.utils.CutToUtils;
-import com.fhx.property.utils.TitleDialog;
+import com.fhx.property.dialog.TitleDialog;
 import com.zhouyou.http.EasyHttp;
 import com.zhouyou.http.callback.SimpleCallBack;
 import com.zhouyou.http.exception.ApiException;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -49,7 +50,7 @@ public class ClockInActivity extends BaseActivity implements View.OnClickListene
     private RelativeLayout rl_group;
     private ImageView image_status,image_morning_status;
     private Timer timer;
-
+    List<RulesGroupBean> rulesGroupBeanList =new ArrayList<>();
     @Override
     protected int initLayout() {
         return R.layout.activity_clock_in;
@@ -77,6 +78,7 @@ public class ClockInActivity extends BaseActivity implements View.OnClickListene
         imageRight.setVisibility(View.VISIBLE);
         imageRight.setImageResource(R.mipmap.icon_statistic);
         getDate();
+        AttendRulesDept();
     }
 
     @Override
@@ -159,8 +161,12 @@ public class ClockInActivity extends BaseActivity implements View.OnClickListene
         titleDialog.show();
 
         final ImageView image_close = titleDialog.findViewById(R.id.image_close);
-        TextView tv_group_type = titleDialog.findViewById(R.id.tv_group_type);
-        TextView tv_group_rule = titleDialog.findViewById(R.id.tv_group_rule);
+        RecyclerView recycle_group = titleDialog.findViewById(R.id.recycle_group);
+        recycle_group.setLayoutManager(new LinearLayoutManager(this));
+        RulesGroupAdapter rulesGroupAdapter =new RulesGroupAdapter(rulesGroupBeanList);
+        recycle_group.setAdapter(rulesGroupAdapter);
+        rulesGroupAdapter.notifyDataSetChanged();
+
         image_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -213,7 +219,7 @@ public class ClockInActivity extends BaseActivity implements View.OnClickListene
      * 考勤打卡
      */
     private void clock(){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date curDate =  new Date(System.currentTimeMillis());
         final String sim = dateFormat.format(curDate);
         EasyHttp.post(AppUrl.AttendSign)
@@ -236,6 +242,38 @@ public class ClockInActivity extends BaseActivity implements View.OnClickListene
                             tv_status.setText("打卡成功");
                         }else {
                             ToastShort(successBean.getMsg());
+                        }
+                    }
+                });
+    }
+    /**
+     * 获取考勤规则
+     */
+
+    private void AttendRulesDept(){
+        EasyHttp.get(AppUrl.AttendRulesDept)
+                .syncRequest(false)
+                .headers("Admin-Token",mmkv.decodeString("token"))
+                .execute(new SimpleCallBack<String>() {
+                    @Override
+                    public void onError(ApiException e) {
+                        Log.e("error",e.getMessage());
+                    }
+
+                    @Override
+                    public void onSuccess(String s) {
+                        AttendRulesDeptBean attendRulesDeptBean = JSON.parseObject(s, AttendRulesDeptBean.class);
+                        if (attendRulesDeptBean.isSuccess()){
+                            List<AttendRulesDeptBean.DataBean.ShiftsBean> shifts = attendRulesDeptBean.getData().getShifts();
+
+                            for (int i = 0; i < shifts.size(); i++) {
+
+                                RulesGroupBean rulesGroupBean = JSON.parseObject(Uri.decode(shifts.get(i).getShiftConfig()), RulesGroupBean.class);
+                                rulesGroupBean.setRulesTitle(shifts.get(i).getShiftName());
+                                rulesGroupBeanList.add(i,rulesGroupBean);
+                                Log.e("fhxx",rulesGroupBeanList.get(i).toString());
+                            }
+
                         }
                     }
                 });

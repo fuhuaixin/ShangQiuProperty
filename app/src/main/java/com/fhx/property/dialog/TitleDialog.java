@@ -1,9 +1,10 @@
-package com.fhx.property.utils;
+package com.fhx.property.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
@@ -34,7 +35,7 @@ public class TitleDialog extends Dialog {
 
         WindowManager.LayoutParams lp = window.getAttributes();
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        lp.height = (int) (screenHeight*0.85);
+        lp.height = (int) (screenHeight*0.9);
         window.setAttributes(lp);
 
     }

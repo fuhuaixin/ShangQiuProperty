@@ -1,4 +1,4 @@
-package com.fhx.property.utils;
+package com.fhx.property.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;

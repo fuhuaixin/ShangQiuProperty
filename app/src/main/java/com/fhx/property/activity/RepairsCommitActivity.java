@@ -29,7 +29,7 @@ import com.fhx.property.bean.RepairTypeListBean;
 import com.fhx.property.bean.RepairsMSgBean;
 import com.fhx.property.bean.SuccessBean;
 import com.fhx.property.bean.UpLoadImageBean;
-import com.fhx.property.utils.ListDialog;
+import com.fhx.property.dialog.ListDialog;
 import com.scrat.app.selectorlibrary.ImageSelector;
 import com.zhouyou.http.EasyHttp;
 import com.zhouyou.http.body.UIProgressResponseCallBack;
@@ -233,8 +233,6 @@ public class RepairsCommitActivity extends BaseActivity implements View.OnClickL
             sendBroadcast(mediaScanIntent);
         } else if (requestCode == REQUEST_CODE_SELECT_IMG) {
             showContent(data);
-            chooseSize();
-            return;
         }
 
     }

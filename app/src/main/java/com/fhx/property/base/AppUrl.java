@@ -1,8 +1,8 @@
 package com.fhx.property.base;
 
 public class AppUrl {
-//    public static final String BASEURL = "http://192.168.10.50:8083/"; //测试(测试环境)
-    public static final String BASEURL = "http://192.168.10.241:8083/"; //正式(测试环境)2
+    public static final String BASEURL = "http://192.168.10.50:8083/"; //测试(测试环境)
+//    public static final String BASEURL = "http://192.168.10.241:8083/"; //正式(测试环境)2
 
     //通知公告 资讯 baseUrl
     public static final String NEWSTITLEURL ="http://192.168.10.50:8055/smartbuilding_light/#/newsshow?id=";
@@ -12,6 +12,9 @@ public class AppUrl {
     public static final String Login = BASEURL + "login/check";
     //退出
     public static final String Logout = BASEURL + "login/out";
+    //查询个人信息
+    public static final String UserInfo = BASEURL + "login/getLoginUserInfo";
+
 
     //获取各个监测设备最新数据
     public static final String EnvList = BASEURL + "env/list";
@@ -33,7 +36,12 @@ public class AppUrl {
     //删除报修信息
     public static final String RepairDel = BASEURL + "repair/del";
     //撤回报修信息
-    public static final String RepairCancel = BASEURL + "repair/cancel";
+    public static final String RepairCancel = BASEURL + "repair/cancel";;
+    //添加报修图片报修内容
+    public static final String RepairModifyRepairInfo = BASEURL + "repair/modifyRepairInfo";
+    //添加投诉图片报修内容
+    public static final String ComplainModifyRepairInfo = BASEURL + "complaint/modifyComplaintInfo";
+
     //提交评价
     public static final String EvaluteSubmit = BASEURL + "evalute/submit";
     //查询评价
@@ -63,10 +71,20 @@ public class AppUrl {
     public static final String AttendRecordList = BASEURL + "attend/record/list";
     //考勤统计-员工
     public static final String AttendRecordStat = BASEURL + "attend/record/stat_emp";
+    //考勤规则查询
+    public static final String AttendRulesDept = BASEURL + "attend/rules/deptarrange";
 
     //图片上传功能
     public static final String ImageUpLoad = BASEURL + "news/upload";
 
+    //查询与我相关工单列表
+    public static final String MyProcess = BASEURL + "activiti/getMyProcess";
+    //获取部门下级机构列表
+    public static final String Department = BASEURL + "dept/getNextDepartments";
+    //工单转派(至客服，部门经理，领班,工程师)
+    public static final String OrderTransfer = BASEURL + "order/transferOrder";
+
+    //
 
 
 

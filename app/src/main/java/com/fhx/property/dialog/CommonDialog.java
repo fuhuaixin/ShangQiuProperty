@@ -1,4 +1,4 @@
-package com.fhx.property.utils;
+package com.fhx.property.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -8,8 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
 
 import com.fhx.property.R;
 

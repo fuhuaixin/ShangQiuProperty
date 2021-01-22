@@ -6,13 +6,12 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.fhx.property.R;
 import com.fhx.property.base.BaseActivity;
 import com.fhx.property.utils.CutToUtils;
-import com.fhx.property.utils.ListDialog;
+import com.fhx.property.dialog.ListDialog;
 import com.lljjcoder.Interface.OnCityItemClickListener;
 import com.lljjcoder.bean.CityBean;
 import com.lljjcoder.bean.DistrictBean;

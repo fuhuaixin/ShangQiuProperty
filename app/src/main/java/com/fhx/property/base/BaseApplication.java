@@ -1,12 +1,26 @@
 package com.fhx.property.base;
 
+import android.annotation.TargetApi;
 import android.app.Application;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.util.Log;
 
+import androidx.core.app.NotificationCompat;
+
+import com.alibaba.fastjson.JSON;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 import com.fhx.property.R;
+import com.fhx.property.bean.WebSocketBean;
+import com.fhx.property.utils.JWebSocketClient;
+import com.fhx.property.utils.NotificationClickReceiver;
 import com.lljjcoder.style.citylist.Toast.ToastUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
@@ -24,6 +38,7 @@ import com.zhouyou.http.cookie.PersistentCookieStore;
 import com.zhouyou.http.model.HttpHeaders;
 import com.zhouyou.http.model.HttpParams;
 
+import java.net.URI;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -33,7 +48,6 @@ import static com.scwang.smartrefresh.layout.SmartRefreshLayout.*;
 
 public class BaseApplication extends Application {
 
-    private String str;
 
     static {
         //设置全局的Header构建器
@@ -60,32 +74,10 @@ public class BaseApplication extends Application {
 
         //网络请求
         EasyHttp.init(this);//默认初始化,必须调用
-        EasyHttp instance = EasyHttp.getInstance();
 
-       /* CookieManger cookieJar = EasyHttp.getCookieJar();
-        if (cookieJar!=null){
-            PersistentCookieStore cookieStore = cookieJar.getCookieStore();
-
-            List<Cookie> cookies = cookieStore.getCookies();
-            Log.e("fhxx",cookies.size()+"\n"+cookies.get(0));
-            str= new StringTokenizer(cookies.get(0).toString(), ";").nextToken();
-
-            Log.e("fhxx  1",str);
-            Log.e("fhxx   2",str.substring(str.indexOf("=")+1));
-
-
-            instance.addCommonHeaders(headers);
-
-        }*/
         //MMKV 本地存取数据 代替sp
-        String initMMKV = MMKV.initialize(this);
-        MMKV mmkv = MMKV.defaultMMKV();
-        Log.e("MMKV 初始化", initMMKV);
-        //全局设置请求头
-        HttpHeaders headers = new HttpHeaders();
-        ToastUtils.showShortToast(this,mmkv.decodeString("token"));
-        headers.put("Admin-Token",mmkv.decodeString("token"));
-
+        MMKV.initialize(this);
+//        MMKV mmkv = MMKV.defaultMMKV();
 
         //在使用SDK各组件之前初始化context信息，传入ApplicationContext
         SDKInitializer.initialize(this);
@@ -94,7 +86,7 @@ public class BaseApplication extends Application {
         SDKInitializer.setCoordType(CoordType.BD09LL);
 
 
-        instance
+        EasyHttp.getInstance()
                 //可以全局统一设置全局URL
                 .setBaseUrl(AppUrl.BASEURL)//设置全局URL  url只能是域名 或者域名+端口号
 
@@ -108,7 +100,7 @@ public class BaseApplication extends Application {
                 .setCacheDiskConverter(new GsonDiskConverter())
 
                 .setCookieStore(new CookieManger(this))
-                .addCommonHeaders(headers)
+//                .addCommonHeaders(headers)
                 //不需要可以设置为0
                 //可以全局统一设置超时重连次数,默认为3次,那么最差的情况会请求4次(一次原始请求,三次重连请求),
                 .setRetryCount(3)//网络不好自动重试3次
@@ -119,6 +111,29 @@ public class BaseApplication extends Application {
                 .setCertificates();//方法一：信任所有证书,不安全有风险
 
 
+        //设置通知类型
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = "chat";
+            String channelName = "聊天消息";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            createNotificationChannel(channelId, channelName, importance);
+
+            channelId = "subscribe";
+            channelName = "订阅消息";
+            importance = NotificationManager.IMPORTANCE_DEFAULT;
+            createNotificationChannel(channelId, channelName, importance);
+        }
+
 
     }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private void createNotificationChannel(String channelId, String channelName, int importance) {
+        NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(
+                NOTIFICATION_SERVICE);
+        notificationManager.createNotificationChannel(channel);
+    }
+
+
 }

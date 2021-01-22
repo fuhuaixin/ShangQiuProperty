@@ -1,6 +1,7 @@
 package com.fhx.property.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +29,8 @@ import com.fhx.property.activity.LeaseListActivity;
 import com.fhx.property.activity.NotifyListActivity;
 import com.fhx.property.activity.ReminderActivity;
 import com.fhx.property.activity.RepairsActivity;
+import com.fhx.property.activity.TaskFaultMsgActivity;
+import com.fhx.property.activity.TaskListActivity;
 import com.fhx.property.adapter.HomeNavAdapter;
 import com.fhx.property.adapter.HomeTaskAdapter;
 import com.fhx.property.base.AppUrl;
@@ -34,8 +38,11 @@ import com.fhx.property.base.BaseFragment;
 import com.fhx.property.bean.HomeNavBean;
 import com.fhx.property.bean.HomeTaskBean;
 import com.fhx.property.bean.NotifyListBean;
-import com.fhx.property.utils.ListDialog;
+import com.fhx.property.bean.UserInfoBean;
+import com.fhx.property.dialog.CommonDialog;
+import com.fhx.property.dialog.ListDialog;
 import com.fhx.property.utils.CutToUtils;
+import com.fhx.property.utils.NotificationUtil;
 import com.to.aboomy.banner.Banner;
 import com.to.aboomy.banner.HolderCreator;
 import com.to.aboomy.banner.ScaleInTransformer;
@@ -58,13 +65,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private RelativeLayout rl_notify_list;
     private ImageView image_weather;
     private TextView tv_inform_one, tv_inform_two;
-    //banner list
-//    private List<String> bannerList =new ArrayList<>();
+    private View view_right;
+    //    private List<String> bannerList =new ArrayList<>();
     private List<Integer> bannerList = new ArrayList<>();
     private HomeNavAdapter homeNavAdapter;
     private HomeTaskAdapter homeTaskAdapter;
     private List<HomeNavBean> homeNavBeanList = new ArrayList<>();
-    private List<HomeTaskBean> homeTaskBeanList = new ArrayList<>();
+    private List<HomeTaskBean.DataBean> homeTaskBeanList = new ArrayList<>();
     private List<String> dialogList = new ArrayList<>();
     private LinearLayout ll_fault_notifi;
 
@@ -84,12 +91,28 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         image_weather = view.findViewById(R.id.image_weather);
         tv_inform_one = view.findViewById(R.id.tv_inform_one);
         tv_inform_two = view.findViewById(R.id.tv_inform_two);
+        view_right = view.findViewById(R.id.view_right);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //通知栏权限
+        if (!NotificationManagerCompat.from(getContext()).areNotificationsEnabled()) {
+            notifiDialog.show();
+        } else {
+            notifiDialog.dismiss();
+        }
+        getNotify();//通知
+        getMyProcess();//任务列表
     }
 
     @Override
     public void setViewData(View view) {
         super.setViewData(view);
-        getNotify();
+        showNotification();
+
+        getUserInfo(); //我的详情
         homeNavBeanList.clear();
         homeNavBeanList.add(new HomeNavBean(R.mipmap.icon_repairs, "报修"));
         homeNavBeanList.add(new HomeNavBean(R.mipmap.icon_device, "设备管理"));
@@ -100,11 +123,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         homeNavBeanList.add(new HomeNavBean(R.mipmap.icon_maintain, "设备维护"));
         homeNavBeanList.add(new HomeNavBean(R.mipmap.icon_car, "车辆管理"));
 
-        homeTaskBeanList.clear();
-        homeTaskBeanList.add(new HomeTaskBean("任务1", "任务一详情", "10:20", 1));
-        homeTaskBeanList.add(new HomeTaskBean("任务2", "任务二详情", "10:30", 1));
-        homeTaskBeanList.add(new HomeTaskBean("任务3", "任务三详情", "10:40", 1));
-        homeTaskBeanList.add(new HomeTaskBean("任务4", "任务四详情", "10:40", 0));
 
         homeNavAdapter = new HomeNavAdapter(homeNavBeanList);
 
@@ -172,7 +190,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 } else if (homeNavBeanList.get(position).getTitle().equals("通讯录")) {
                     CutToUtils.getInstance().JumpTo(getActivity(), ContactsActivity.class);
                 }
-                Toast.makeText(getContext(), "点击了" + position, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -180,7 +197,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         homeTaskAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                Toast.makeText(getContext(), "点击了item" + position, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), TaskFaultMsgActivity.class);
+                intent.putExtra("jumpOne", homeTaskBeanList.get(position).getOrderType());
+                intent.putExtra("jumpTwo", homeTaskBeanList.get(position).getProcessId());
+                intent.putExtra("jumpThree", homeTaskBeanList.get(position).getStatus());
+                startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.activity_in_from_anim, R.anim.activity_in_to_anim);
             }
         });
 
@@ -206,6 +228,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         rl_notify_list.setOnClickListener(this);
         ll_fault_notifi.setOnClickListener(this);
         image_weather.setOnClickListener(this);
+        view_right.setOnClickListener(this);
     }
 
 
@@ -220,6 +243,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.image_weather:
                 CutToUtils.getInstance().JumpTo(getActivity(), EnvironmentActivity.class);
+                break;
+            case R.id.view_right:
+                CutToUtils.getInstance().JumpTo(getActivity(), TaskListActivity.class);
+
                 break;
         }
     }
@@ -249,4 +276,84 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     }
                 });
     }
+
+    /**
+     * 获取与我相关任务
+     */
+    private void getMyProcess() {
+        EasyHttp.get(AppUrl.MyProcess)
+                .headers("Admin-Token", mmkv.decodeString("token"))
+                .params("type", "0")
+                .params("page", "1")
+                .params("size", "5")
+                .execute(new SimpleCallBack<String>() {
+                    @Override
+                    public void onError(ApiException e) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(String s) {
+                        //orderType  0报修 1 投诉 2 设备维护
+                        HomeTaskBean homeTaskBean = JSON.parseObject(s, HomeTaskBean.class);
+                        if (homeTaskBean.isSuccess()) {
+                            homeTaskBeanList.clear();
+                            homeTaskBeanList.addAll(homeTaskBean.getData());
+                            homeTaskAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });
+    }
+
+    /**
+     * 获取我的信息
+     */
+
+    private void getUserInfo() {
+        EasyHttp.get(AppUrl.UserInfo)
+                .headers("Admin-Token", mmkv.decodeString("token"))
+                .execute(new SimpleCallBack<String>() {
+                    @Override
+                    public void onError(ApiException e) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(String s) {
+                        Log.e("fhxx", s);
+                        UserInfoBean userInfoBean = JSON.parseObject(s, UserInfoBean.class);
+                        if (userInfoBean.isSuccess()) {
+                            UserInfoBean.DataBean data = userInfoBean.getData();
+                            mmkv.encode("userType", data.getCurrentUser().getRoleId());
+                            mmkv.encode("deptId", data.getDepartment().getDeptId());
+                        }
+                    }
+                });
+    }
+
+    /**
+     * 开启通知提示弹窗
+     */
+    CommonDialog notifiDialog;
+
+    private void showNotification() {
+        notifiDialog = new CommonDialog(getContext());
+        notifiDialog.setImageResId(-1)
+                .setTitle("系统提示")
+                .setSingle(false)
+                .setMessage("为了您更好的体验，请允许打开通知，谢谢配合。")
+                .setOnClickBottomListener(new CommonDialog.OnClickBottomListener() {
+                    @Override
+                    public void onPositiveClick() {
+                        NotificationUtil notificationUtil = new NotificationUtil();
+                        notificationUtil.goToNotificationSetting(getContext());
+                    }
+
+                    @Override
+                    public void onNegtiveClick() {
+                        notifiDialog.dismiss();
+                    }
+                });
+    }
+
 }

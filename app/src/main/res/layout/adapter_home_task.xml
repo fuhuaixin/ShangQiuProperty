@@ -1,63 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_item"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/rl_item">
+    android:layout_height="wrap_content">
 
     <ImageView
-        android:layout_marginRight="10dp"
         android:id="@+id/image_big"
-        android:src="@mipmap/icon_task_big"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:src="@mipmap/icon_task_big" />
 
     <ImageView
         android:id="@+id/image_task_state"
-        android:src="@mipmap/icon_task_ing"
-        android:layout_alignRight="@+id/image_big"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/image_big"
+        android:src="@mipmap/icon_task_ing"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_title"
-        android:text="sadafdasfdafadfafdafadasfddasdfadafdasdfafafa"
-        android:layout_toRightOf="@+id/image_big"
-        android:textSize="16sp"
-        android:layout_marginRight="70dp"
-        android:singleLine="true"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:textStyle="bold"
-        android:textColor="@color/tv333"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginRight="70dp"
+        android:layout_toRightOf="@+id/image_big"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="sadafdasfdafadfafdafadasfddasdfadafdasdfafafa"
+        android:textColor="@color/tv333"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tv_time"
-        android:text="10.30"
-        android:textSize="12sp"
-        android:textColor="@color/tv888"
-        android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <TextView
-        android:layout_marginTop="10dp"
-        android:id="@+id/tv_msg"
-        android:text="到达巡逻点A时填写任务单，确保巡逻xxxxxxxxxxxxxx"
-        android:textSize="14sp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="10.30"
         android:textColor="@color/tv888"
-        android:singleLine="true"
-        android:maxLines="1"
-        android:ellipsize="end"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_order"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_title"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="40dp"
         android:layout_toRightOf="@+id/image_big"
-        android:layout_below="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="到达巡逻点A时填写任务单，确保巡逻xxxxxxxxxxxxxx"
+        android:textColor="@color/tv888"
+        android:textSize="14sp" />
 
     <View
         android:id="@+id/line_view"
-        android:layout_below="@+id/image_big"
         android:layout_width="match_parent"
-        android:layout_height="25dp"/>
+        android:layout_height="25dp"
+        android:layout_below="@+id/image_big" />
 </RelativeLayout>

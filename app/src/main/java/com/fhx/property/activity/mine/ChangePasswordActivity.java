@@ -8,7 +8,7 @@ import com.fhx.property.R;
 import com.fhx.property.base.BaseActivity;
 
 /**
- * 修改密码
+ * 修改密码  修改完密码就清除本地保存数据
  */
 public class ChangePasswordActivity extends BaseActivity implements View.OnClickListener {
     private ImageView imageLeft,imageRight;

@@ -292,6 +292,32 @@
             android:name=".activity.mine.MakeCardMsgActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
+        <!--任务-设备故障-详情-->
+        <activity
+            android:name=".activity.TaskFaultMsgActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--任务-投诉建议-详情-->
+        <activity
+            android:name=".activity.TaskComplainMsgActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--任务-报修-详情-->
+        <activity
+            android:name=".activity.TaskRepairMsgActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--任务-报修列表-->
+        <activity
+            android:name=".activity.TaskListActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <!--人员指派-->
+        <activity android:name=".activity.TaskChoosePeopleActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <!--图片放大-->
+        <activity
+            android:name=".activity.ImageMagnifyActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
     </application>
 
 </manifest>
